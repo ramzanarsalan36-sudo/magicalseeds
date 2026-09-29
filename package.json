@@ -1,0 +1,18 @@
+{
+  "name": "magical-seeds",
+  "version": "1.0.0",
+  "description": "Magical Seeds - 6-in-1 Mixed Superfood Seeds Storefront & Admin Portal",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y serve . -p 3000",
+    "start": "npx -y serve . -p 3000",
+    "dev:worker": "npx -y wrangler dev worker.js --port 8787"
+  },
+  "keywords": [
+    "magical-seeds",
+    "ecommerce",
+    "storefront"
+  ],
+  "author": "Magical Seeds",
+  "license": "ISC"
+}

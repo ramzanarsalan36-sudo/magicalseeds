@@ -1,0 +1,30 @@
+{
+  "rules": {
+    ".read": "auth != null && (auth.uid === '1BOEBP2qI0OzGls8UVs7a95TtD43')",
+    ".write": "auth != null && (auth.uid === '1BOEBP2qI0OzGls8UVs7a95TtD43')",
+    "orders": {
+      ".read": "auth != null && (auth.uid === '1BOEBP2qI0OzGls8UVs7a95TtD43')",
+      ".indexOn": [
+        "status",
+        "order_date",
+        "created_at"
+      ],
+      "$orderId": {
+        ".read": "auth != null && (auth.uid === '1BOEBP2qI0OzGls8UVs7a95TtD43')",
+        ".write": "auth != null && (auth.uid === '1BOEBP2qI0OzGls8UVs7a95TtD43') || (!data.exists() && newData.exists())"
+      }
+    },
+    "settings": {
+      ".read": "auth != null && (auth.uid === '1BOEBP2qI0OzGls8UVs7a95TtD43')",
+      ".write": "auth != null && (auth.uid === '1BOEBP2qI0OzGls8UVs7a95TtD43')"
+    },
+    "webhookEvents": {
+      ".read": "auth != null && (auth.uid === '1BOEBP2qI0OzGls8UVs7a95TtD43')",
+      ".write": "auth != null && (auth.uid === '1BOEBP2qI0OzGls8UVs7a95TtD43')"
+    },
+    "idempotencyLocks": {
+      ".read": "auth != null && (auth.uid === '1BOEBP2qI0OzGls8UVs7a95TtD43')",
+      ".write": "auth != null && (auth.uid === '1BOEBP2qI0OzGls8UVs7a95TtD43')"
+    }
+  }
+}

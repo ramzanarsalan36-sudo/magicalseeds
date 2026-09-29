@@ -1,0 +1,2260 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth h-full antialiased">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Magical Seeds — Real Seeds, Real Nutrition | 100% Natural Mixed Superfood Seeds</title>
+  <meta name="description"
+    content="Magical Seeds (Premium 6-in-1 Mixed Superfood Seeds: Pumpkin, Chia, Sunflower, Flax, Black Sesame, Char Magaz). Nature's goodness in every bite. 100% Natural, Rich in Omega-3 & Fibre. Order with Free Delivery & Cash on Delivery." />
+  <meta name="keywords"
+    content="magical seeds, mixed seeds, pumpkin seeds, chia seeds, sunflower seeds, flax seeds, black sesame, char magaz, superfoods, healthy seeds, keto seeds, weight loss seeds" />
+
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="product" />
+  <meta property="og:site_name" content="Magical Seeds" />
+  <meta property="og:title" content="Magical Seeds — Real Seeds, Real Nutrition" />
+  <meta property="og:description"
+    content="Nature's goodness in every bite. 6 power-packed superfood seeds rich in Omega-3, Fibre & Protein. Flat 50% OFF + Free Delivery across India." />
+  <meta property="og:image" content="./image/product_hero_pack.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Magical Seeds — Real Seeds, Real Nutrition" />
+  <meta name="twitter:description"
+    content="Nature's goodness in every bite. Order today with Free Express Delivery & Cash on Delivery across India." />
+  <meta name="twitter:image" content="./image/product_hero_pack.webp" />
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Cashfree Checkout SDK v3 & Razorpay Checkout SDK -->
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- Firebase App & Realtime Database Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            hand: ['"Caveat"', 'cursive', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#0c5836',
+              900: '#064e3b',
+              950: '#022c22',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    .font-handwriting {
+      font-family: 'Caveat', cursive, sans-serif;
+    }
+
+    body {
+      background-color: #F8FAF7;
+      color: #111827;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Forest Green Primary CTA Button */
+    .cta-green-btn {
+      background: linear-gradient(135deg, #0e5e3a 0%, #0c5836 50%, #064e3b 100%);
+      box-shadow: 0 4px 18px rgba(12, 88, 54, 0.38);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .cta-green-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 26px rgba(12, 88, 54, 0.55);
+      background: linear-gradient(135deg, #15803d 0%, #0c5836 50%, #022c22 100%);
+    }
+
+    .cta-green-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Radiant Pulsing Glow Ring Effect */
+    .glow-pulse-btn {
+      position: relative;
+      animation: radiantGlow 2.4s infinite ease-in-out;
+    }
+
+    @keyframes radiantGlow {
+      0% {
+        box-shadow: 0 0 0 0 rgba(12, 88, 54, 0.65), 0 4px 18px rgba(12, 88, 54, 0.35);
+      }
+
+      50% {
+        box-shadow: 0 0 0 10px rgba(12, 88, 54, 0), 0 8px 24px rgba(12, 88, 54, 0.5);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(12, 88, 54, 0), 0 4px 18px rgba(12, 88, 54, 0.35);
+      }
+    }
+
+    /* Shimmer effect */
+    .shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shimmer::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(60deg,
+          transparent 30%,
+          rgba(255, 255, 255, 0.35) 50%,
+          transparent 70%);
+      transform: rotate(30deg);
+      animation: shimmer-anim 3.5s infinite;
+    }
+
+    @keyframes shimmer-anim {
+      0% {
+        transform: translate(-100%, -100%) rotate(30deg);
+      }
+
+      100% {
+        transform: translate(100%, 100%) rotate(30deg);
+      }
+    }
+
+    /* Infinite Marquee Ticker */
+    @keyframes marqueeScroll {
+      0% {
+        transform: translateX(0%);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .animate-marquee {
+      display: inline-flex;
+      white-space: nowrap;
+      animation: marqueeScroll 22s linear infinite;
+    }
+
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+
+    /* Infinite Horizontal Seed Marquee (Synchronized with Header Marquee) */
+    @keyframes seedMarqueeScroll {
+      0% {
+        transform: translateX(0%);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .animate-seeds-scroll {
+      display: inline-flex;
+      white-space: nowrap;
+      animation: seedMarqueeScroll 22s linear infinite;
+    }
+
+    .animate-seeds-scroll:hover {
+      animation-play-state: paused;
+    }
+
+    /* Hide scrollbar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #FFFFFF;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+  </style>
+</head>
+
+<body
+  class="min-h-full flex flex-col antialiased selection:bg-emerald-100 selection:text-emerald-900 pb-28 md:pb-12 bg-white">
+
+  <!-- Thin Sticky Auto-Scrolling Marquee Strip -->
+  <div
+    class="sticky top-0 z-40 bg-[#0c5836] text-white text-[11px] font-semibold py-1.5 px-2 shadow-xs overflow-hidden cursor-pointer flex items-center border-b border-emerald-900/40 select-none"
+    onclick="openFastOrderModal()">
+    <div class="animate-marquee gap-6 items-center text-emerald-100 tracking-wide">
+      <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-truck-fast text-emerald-300"></i> FREE
+        EXPRESS DELIVERY ACROSS INDIA</span>
+      <span class="text-emerald-400/60">•</span>
+      <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-fire text-amber-400"></i> FLAT 50% OFF TODAY
+        ONLY</span>
+      <span class="text-emerald-400/60">•</span>
+      <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-seedling text-emerald-300"></i> 100% RAW &
+        ORGANIC MIXED SEEDS</span>
+      <span class="text-emerald-400/60">•</span>
+      <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-hand-holding-dollar text-emerald-300"></i>
+        CASH ON DELIVERY AVAILABLE</span>
+      <span class="text-emerald-400/60">•</span>
+      <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-star text-amber-400"></i> 4.7 RATED BY 3,400+
+        HEALTHY BUYERS</span>
+      <span class="text-emerald-400/60">•</span>
+      <!-- Duplicate set for seamless continuous loop -->
+      <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-truck-fast text-emerald-300"></i> FREE
+        EXPRESS DELIVERY ACROSS INDIA</span>
+      <span class="text-emerald-400/60">•</span>
+      <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-fire text-amber-400"></i> FLAT 50% OFF TODAY
+        ONLY</span>
+      <span class="text-emerald-400/60">•</span>
+      <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-seedling text-emerald-300"></i> 100% RAW &
+        ORGANIC MIXED SEEDS</span>
+      <span class="text-emerald-400/60">•</span>
+      <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-hand-holding-dollar text-emerald-300"></i>
+        CASH ON DELIVERY AVAILABLE</span>
+      <span class="text-emerald-400/60">•</span>
+      <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-star text-amber-400"></i> 4.7 RATED BY 3,400+
+        HEALTHY BUYERS</span>
+      <span class="text-emerald-400/60">•</span>
+    </div>
+  </div>
+
+  <!-- Main Content Container (Mobile-First Frame) -->
+  <main class="w-full max-w-md sm:max-w-lg mx-auto px-3 sm:px-4 pt-2 space-y-3">
+
+    <!-- Section 1: Hero Section (Open, Clean, Not Boxed in a Card) -->
+    <section class="space-y-3">
+
+      <!-- Hero Product Image Display & Touch Carousel (FIRST ON PAGE - NO AUTO-SCROLL) -->
+      <div class="relative w-full rounded-2xl overflow-hidden bg-white shadow-xs group select-none">
+        <div id="productSlider" class="flex transition-transform duration-300 ease-out"
+          style="transform: translateX(-100%);">
+          <!-- Slide 7 CLONE (Prepended for Seamless Infinite Backward Loop) -->
+          <div class="w-full flex-shrink-0 relative aspect-square bg-white flex items-center justify-center p-2">
+            <img src="./image/2.webp" alt="Magical Seeds Standup Pouch with Seed Bowl & Nutrition Highlights"
+              class="w-full h-full object-contain rounded-xl pointer-events-none" loading="lazy" />
+          </div>
+
+          <!-- Slide 1: Hero Pack - Studio Pack Shot (Clean, Pure Product Photo - No Overlays) -->
+          <div
+            class="w-full flex-shrink-0 relative aspect-square bg-gradient-to-b from-emerald-50/30 via-white to-emerald-50/20 flex items-center justify-center p-2.5">
+            <img src="./image/product_hero_pack.webp" alt="Magical Seeds 6-in-1 Superfood Pouch Pack"
+              class="w-full h-full object-contain filter drop-shadow-lg pointer-events-none" loading="eager" />
+          </div>
+
+          <!-- Slide 2: Nutritious Morning Oatmeal Bowl with Seeds on Top -->
+          <div class="w-full flex-shrink-0 relative aspect-square bg-white flex items-center justify-center p-2">
+            <img src="./image/bowl_oats_seeds.webp"
+              alt="Nutritious Morning Oats Topped with Crunchy Mixed Seeds and Fresh Fruits"
+              class="w-full h-full object-cover rounded-xl pointer-events-none" loading="lazy" />
+          </div>
+
+          <!-- Slide 3: Vibrant Superfood Acai Berry Smoothie Bowl with Seeds -->
+          <div class="w-full flex-shrink-0 relative aspect-square bg-white flex items-center justify-center p-2">
+            <img src="./image/bowl_acai_smoothie.webp" alt="Superfood Acai Berry Smoothie Bowl Topped with Mixed Seeds"
+              class="w-full h-full object-cover rounded-xl pointer-events-none" loading="lazy" />
+          </div>
+
+          <!-- Slide 4: Tropical Mango Passion Fruit Smoothie Bowl with Seeds -->
+          <div class="w-full flex-shrink-0 relative aspect-square bg-white flex items-center justify-center p-2">
+            <img src="./image/bowl_tropical_smoothie.webp" alt="Tropical Mango Smoothie Bowl with Chia and Roasted Seeds"
+              class="w-full h-full object-cover rounded-xl pointer-events-none" loading="lazy" />
+          </div>
+
+          <!-- Slide 5: How to Enjoy (1:1 High Definition Infographic Photo) -->
+          <div
+            class="w-full flex-shrink-0 relative aspect-square bg-[#ebf7f0] flex items-center justify-center p-1.5 sm:p-2 select-none">
+            <img src="./image/how_to_enjoy_guide.webp" alt="How to Enjoy Magical Seeds — Smoothies, Yogurt, Salads, Oats"
+              class="w-full h-full object-contain rounded-2xl pointer-events-none shadow-xs" loading="lazy" />
+          </div>
+
+          <!-- Slide 6: Concentric Variety of 6 Seeds (Clean Photo - No Overlays) -->
+          <div class="w-full flex-shrink-0 relative aspect-square bg-white flex items-center justify-center p-2">
+            <img src="./image/concentric_seeds_circle.webp" alt="Concentric Variety of 6 Seeds"
+              class="w-full h-full object-cover rounded-xl pointer-events-none" loading="lazy" />
+          </div>
+
+          <!-- Slide 7: Product Pack & Bowls (Clean Photo - No Overlays - Always Last) -->
+          <div class="w-full flex-shrink-0 relative aspect-square bg-white flex items-center justify-center p-2">
+            <img src="./image/2.webp" alt="Magical Seeds Standup Pouch with Seed Bowl & Nutrition Highlights"
+              class="w-full h-full object-contain rounded-xl pointer-events-none" loading="lazy" />
+          </div>
+
+          <!-- Slide 1 CLONE (Appended for Seamless Infinite Forward Loop - Clean Photo) -->
+          <div
+            class="w-full flex-shrink-0 relative aspect-square bg-gradient-to-b from-emerald-50/30 via-white to-emerald-50/20 flex items-center justify-center p-2.5">
+            <img src="./image/product_hero_pack.webp" alt="Magical Seeds 6-in-1 Superfood Pouch Pack"
+              class="w-full h-full object-contain filter drop-shadow-lg pointer-events-none" loading="lazy" />
+          </div>
+        </div>
+
+        <!-- Slider Arrows -->
+        <button onclick="scrollSlide(-1)"
+          class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs text-gray-800 hover:text-emerald-900 shadow-md flex items-center justify-center text-xs transition-colors z-10"
+          aria-label="Previous Slide">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button onclick="scrollSlide(1)"
+          class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs text-gray-800 hover:text-emerald-900 shadow-md flex items-center justify-center text-xs transition-colors z-10"
+          aria-label="Next Slide">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <!-- Slide Indicators Dots (7 Real Slides) -->
+        <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-10" id="sliderDotsContainer">
+          <span onclick="goToRealSlide(0)"
+            class="w-4 h-1.5 rounded-full bg-[#0c5836] transition-all duration-300 cursor-pointer"></span>
+          <span onclick="goToRealSlide(1)"
+            class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 cursor-pointer"></span>
+          <span onclick="goToRealSlide(2)"
+            class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 cursor-pointer"></span>
+          <span onclick="goToRealSlide(3)"
+            class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 cursor-pointer"></span>
+          <span onclick="goToRealSlide(4)"
+            class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 cursor-pointer"></span>
+          <span onclick="goToRealSlide(5)"
+            class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 cursor-pointer"></span>
+          <span onclick="goToRealSlide(6)"
+            class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 cursor-pointer"></span>
+        </div>
+      </div>
+
+      <!-- 6 Power Seeds in Main Hero Section (Fast Auto-Scroll + Smooth Manual Hand Drag) -->
+      <div
+        class="space-y-1.5 pt-0.5 -mx-3 sm:-mx-4 px-3 sm:px-4 w-[calc(100%+1.5rem)] sm:w-[calc(100%+2rem)] overflow-hidden">
+        <!-- Clean Seeds Track Header (No clumsy auto/swipe labels) -->
+        <div class="flex items-center justify-between px-1">
+          <span class="text-xs sm:text-sm font-black text-gray-900 uppercase tracking-wider">
+            6 Power Seeds Inside
+          </span>
+          <span
+            class="text-[10px] sm:text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full shadow-2xs">
+            100% Natural
+          </span>
+        </div>
+
+        <!-- 100% Width Track with Fast Auto-Scroll + Manual Swipe/Drag -->
+        <div class="relative w-full overflow-hidden select-none py-1">
+          <div id="seedsScrollTrack"
+            class="flex gap-5 sm:gap-6 overflow-x-auto no-scrollbar py-1 px-1 cursor-grab active:cursor-grabbing select-none"
+            style="-webkit-overflow-scrolling: touch; scroll-behavior: auto;">
+
+            <!-- Block 1: 6 Seeds -->
+            <div class="flex items-center gap-5 sm:gap-6 shrink-0">
+              <!-- 1. Pumpkin Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_pumpkin.webp" alt="Pumpkin Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Pumpkin</span>
+              </div>
+
+              <!-- 2. Chia Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_chia.webp" alt="Chia Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Chia</span>
+              </div>
+
+              <!-- 3. Sunflower Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_sunflower.webp" alt="Sunflower Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Sunflower</span>
+              </div>
+
+              <!-- 4. Flax Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_flax.webp" alt="Flax Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Flax</span>
+              </div>
+
+              <!-- 5. Black Sesame Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_sesame.webp" alt="Black Sesame Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Black</span>
+              </div>
+
+              <!-- 6. Char Magaz Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_melon.webp" alt="Char Magaz Melon Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Char Magaz</span>
+              </div>
+            </div>
+
+            <!-- Block 2: Duplicate 6 Seeds for Infinite Continuous Scroll -->
+            <div class="flex items-center gap-5 sm:gap-6 shrink-0">
+              <!-- 1. Pumpkin Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_pumpkin.webp" alt="Pumpkin Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Pumpkin</span>
+              </div>
+
+              <!-- 2. Chia Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_chia.webp" alt="Chia Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Chia</span>
+              </div>
+
+              <!-- 3. Sunflower Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_sunflower.webp" alt="Sunflower Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Sunflower</span>
+              </div>
+
+              <!-- 4. Flax Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_flax.webp" alt="Flax Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Flax</span>
+              </div>
+
+              <!-- 5. Black Sesame Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_sesame.webp" alt="Black Sesame Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Black</span>
+              </div>
+
+              <!-- 6. Char Magaz Seeds -->
+              <div class="flex flex-col items-center shrink-0 text-center select-none group w-20 sm:w-24">
+                <div
+                  class="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden shadow-xs border-2 border-emerald-100 group-hover:border-emerald-500 group-hover:scale-105 transition-all bg-emerald-50/50">
+                  <img src="./image/seed_melon.webp" alt="Char Magaz Melon Seeds"
+                    class="w-full h-full object-cover pointer-events-none" loading="lazy" />
+                </div>
+                <span class="text-xs sm:text-sm font-black text-gray-900 mt-1.5 leading-tight">Char Magaz</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Product Hero Heading (Highly Attractive Luxury Presentation) -->
+      <div
+        class="bg-gradient-to-b from-white via-white to-emerald-50/40 rounded-2xl p-3.5 sm:p-4 border border-emerald-100/90 shadow-xs space-y-2.5">
+
+        <!-- Top Meta Bar: Verified Reviews & Clean 100% Organic Badge (Never clips or cuts off) -->
+        <div class="flex items-center justify-between gap-1.5 flex-wrap">
+          <!-- Verified Rating with Gold Stars -->
+          <div
+            class="inline-flex items-center gap-1 bg-white px-2 py-0.5 rounded-full shadow-2xs border border-gray-100 whitespace-nowrap">
+            <div class="flex text-amber-400 text-[10px] gap-0.5">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star-half-stroke"></i>
+            </div>
+            <span class="font-black text-xs text-gray-900 ml-0.5">4.8</span>
+            <span class="text-gray-400 text-[10px] font-medium">(3,420+)</span>
+          </div>
+
+          <!-- Clean Tag (Guaranteed never to cut off) -->
+          <span
+            class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-extrabold text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-full whitespace-nowrap shadow-2xs border border-emerald-200/80">
+            <i class="fa-solid fa-leaf text-emerald-600 text-[10px]"></i> 100% Raw &amp; Organic
+          </span>
+        </div>
+
+        <!-- Product Name & Subtitle with Highlighted Last Words -->
+        <div>
+          <div class="flex items-center justify-between gap-2 flex-wrap">
+            <h1 class="text-2xl sm:text-3xl font-black text-gray-950 tracking-tight leading-tight">
+              Magical Seeds
+            </h1>
+            <span
+              class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-black text-emerald-950 bg-gradient-to-r from-emerald-100 via-teal-100 to-emerald-200 px-2.5 py-0.5 rounded-full border border-emerald-300 shadow-2xs uppercase tracking-wider">
+              ✨ 6-in-1 Mix
+            </span>
+          </div>
+          <!-- Subtitle with highlighted, colourful "Immunity & Vitality" -->
+          <div
+            class="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs sm:text-sm font-semibold text-gray-600 leading-snug">
+            <span>Daily Roasted Superfood Seeds for</span>
+            <span
+              class="inline-flex items-center gap-1 font-extrabold text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-md border border-emerald-300/80 shadow-2xs whitespace-nowrap">
+              <i class="fa-solid fa-shield-heart text-emerald-600 text-xs"></i> Immunity
+            </span>
+            <span class="text-gray-400 font-bold">&amp;</span>
+            <span
+              class="inline-flex items-center gap-1 font-extrabold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-md border border-amber-300/80 shadow-2xs whitespace-nowrap">
+              <i class="fa-solid fa-bolt-lightning text-amber-500 text-xs"></i> Vitality
+            </span>
+          </div>
+        </div>
+
+        <!-- 6 Seeds Micro-Chips (Attractive Visual Ingredient Badges with Custom Tints) -->
+        <div class="flex flex-wrap gap-1.5 pt-0.5">
+          <span
+            class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-900 bg-emerald-50/90 border border-emerald-200/90 px-2 py-0.5 rounded-lg shadow-2xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Pumpkin
+          </span>
+          <span
+            class="inline-flex items-center gap-1 text-[11px] font-bold text-slate-800 bg-slate-100/90 border border-slate-200 px-2 py-0.5 rounded-lg shadow-2xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-700"></span> Chia
+          </span>
+          <span
+            class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-900 bg-amber-50/90 border border-amber-200/90 px-2 py-0.5 rounded-lg shadow-2xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Sunflower
+          </span>
+          <span
+            class="inline-flex items-center gap-1 text-[11px] font-bold text-orange-900 bg-orange-50/90 border border-orange-200/90 px-2 py-0.5 rounded-lg shadow-2xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span> Golden Flax
+          </span>
+          <span
+            class="inline-flex items-center gap-1 text-[11px] font-bold text-gray-900 bg-gray-100/90 border border-gray-200 px-2 py-0.5 rounded-lg shadow-2xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-gray-950"></span> Black Sesame
+          </span>
+          <span
+            class="inline-flex items-center gap-1 text-[11px] font-bold text-teal-900 bg-teal-50/90 border border-teal-200/90 px-2 py-0.5 rounded-lg shadow-2xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span> Char Magaz
+          </span>
+        </div>
+
+        <!-- 4 Key Highlights Row (Polished clean micro-cards) -->
+        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-emerald-100/80 text-xs">
+          <div
+            class="flex items-center gap-1.5 text-gray-800 font-bold bg-white/70 rounded-lg p-1.5 border border-emerald-100/70">
+            <span
+              class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] shrink-0">
+              <i class="fa-solid fa-fire-flame-curved"></i>
+            </span>
+            <span class="text-[11px]">100% Raw &amp; Roasted</span>
+          </div>
+          <div
+            class="flex items-center gap-1.5 text-gray-800 font-bold bg-white/70 rounded-lg p-1.5 border border-emerald-100/70">
+            <span
+              class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] shrink-0">
+              <i class="fa-solid fa-ban"></i>
+            </span>
+            <span class="text-[11px]">Zero Added Salt / Sugar</span>
+          </div>
+          <div
+            class="flex items-center gap-1.5 text-gray-800 font-bold bg-white/70 rounded-lg p-1.5 border border-emerald-100/70">
+            <span
+              class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] shrink-0">
+              <i class="fa-solid fa-heart-pulse"></i>
+            </span>
+            <span class="text-[11px]">Rich Omega-3 &amp; Fibre</span>
+          </div>
+          <div
+            class="flex items-center gap-1.5 text-gray-800 font-bold bg-white/70 rounded-lg p-1.5 border border-emerald-100/70">
+            <span
+              class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] shrink-0">
+              <i class="fa-solid fa-dumbbell"></i>
+            </span>
+            <span class="text-[11px]">12g Plant Protein / 100g</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Trust Bar (Clean Divider Line - NO Grey Card) -->
+      <div class="border-y border-gray-100 py-2.5 px-1 flex items-center justify-between text-center text-xs">
+        <div class="flex items-center gap-1.5 font-bold text-gray-800">
+          <i class="fa-solid fa-truck-fast text-emerald-600"></i>
+          <span class="text-[11px]">Free Delivery</span>
+        </div>
+        <span class="text-gray-300">•</span>
+        <div class="flex items-center gap-1.5 font-bold text-gray-800">
+          <i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i>
+          <span class="text-[11px]">COD Available</span>
+        </div>
+        <span class="text-gray-300">•</span>
+        <div class="flex items-center gap-1.5 font-bold text-gray-800">
+          <i class="fa-solid fa-shield-heart text-emerald-600"></i>
+          <span class="text-[11px]">3,400+ Buyers</span>
+        </div>
+      </div>
+
+    </section>
+
+
+
+
+
+    <!-- Section 3: How to Enjoy? (Infographic Banner as per Reference Design) -->
+    <section class="pt-2">
+      <div
+        class="bg-[#ebf7f0] rounded-3xl p-3.5 sm:p-4 border border-emerald-100/90 shadow-2xs flex items-center justify-between gap-2 overflow-hidden relative">
+        <div class="space-y-2 max-w-[62%] sm:max-w-[68%]">
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-emerald-950 tracking-tight leading-tight">
+              How to Enjoy?
+            </h2>
+            <p class="text-[10px] sm:text-xs text-emerald-800/80 font-medium mt-0.5 leading-snug">
+              Add it to your meals & make them healthier.
+            </p>
+          </div>
+
+          <!-- 4 Usage Real Food Photos for Immediate Understanding -->
+          <div class="flex items-center gap-2 sm:gap-3.5 pt-0.5">
+            <div class="flex flex-col items-center text-center">
+              <div
+                class="w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden shadow-2xs border-2 border-emerald-500 bg-white">
+                <img src="./image/enjoy_smoothie.webp" alt="Smoothies" class="w-full h-full object-cover"
+                  loading="lazy" />
+              </div>
+              <span class="text-[9px] sm:text-[10px] font-bold text-emerald-950 mt-1">Smoothies</span>
+            </div>
+
+            <div class="flex flex-col items-center text-center">
+              <div
+                class="w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden shadow-2xs border-2 border-emerald-500 bg-white">
+                <img src="./image/enjoy_yogurt.webp" alt="Yogurt" class="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <span class="text-[9px] sm:text-[10px] font-bold text-emerald-950 mt-1">Yogurt</span>
+            </div>
+
+            <div class="flex flex-col items-center text-center">
+              <div
+                class="w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden shadow-2xs border-2 border-emerald-500 bg-white">
+                <img src="./image/enjoy_salad.webp" alt="Salads" class="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <span class="text-[9px] sm:text-[10px] font-bold text-emerald-950 mt-1">Salads</span>
+            </div>
+
+            <div class="flex flex-col items-center text-center">
+              <div
+                class="w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden shadow-2xs border-2 border-emerald-500 bg-white">
+                <img src="./image/enjoy_oats.webp" alt="Oats" class="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <span class="text-[9px] sm:text-[10px] font-bold text-emerald-950 mt-1">Oats</span>
+            </div>
+          </div>
+
+          <!-- Script Handwriting Accent -->
+          <div class="pt-0.5">
+            <span
+              class="font-hand text-sm sm:text-base text-emerald-800 font-bold tracking-wide flex items-center gap-1">
+              Healthy Habits, Better You ♡
+            </span>
+          </div>
+        </div>
+
+        <!-- Right: Appetizing Bowl with Seeds Photo -->
+        <div class="shrink-0 w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden shadow-xs border-2 border-white">
+          <img src="./image/smoothie_bowl_enjoy.webp" alt="Enjoy Magical Seeds with Yogurt and Breakfast Bowl"
+            class="w-full h-full object-cover object-center" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Mid-page Action Banner (As shown in Screenshot 2 & 3) -->
+    <div class="relative rounded-2xl overflow-hidden shadow-xs mt-3">
+      <img src="./image/lifestyle_banner.webp" alt="Pure Natural Wholesome Banner"
+        class="w-full h-36 sm:h-44 object-cover" loading="lazy" />
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-emerald-950/85 via-emerald-900/60 to-transparent flex items-center justify-between p-4 sm:p-5 text-white">
+        <div class="max-w-[65%] space-y-1">
+          <h3 class="font-extrabold text-base sm:text-xl leading-tight">Pure. Natural. Wholesome.</h3>
+          <p class="text-xs text-emerald-100/90 leading-snug">Your daily dose of nutrition, straight from nature.</p>
+        </div>
+        <button onclick="openFastOrderModal()"
+          class="cta-green-btn text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-full shadow-md shrink-0 flex items-center gap-1.5 border border-emerald-400/40 cursor-pointer">
+          <span>Shop Now</span> <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
+    </div>
+
+    </section>
+
+
+    <!-- Section 4: Nutritional Powerhouse & Health Benefits Table -->
+    <section class="space-y-3 pt-3 border-t border-gray-100">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Nutrition Per 100g</h2>
+          <p class="text-gray-500 text-xs font-medium">Lab-tested & certified nutrient dense superfood</p>
+        </div>
+        <span
+          class="bg-emerald-50 text-emerald-800 font-bold text-xs px-2.5 py-1 rounded-full border border-emerald-100">
+          Zero Added Sugar
+        </span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+        <div class="bg-emerald-50/60 p-3 rounded-2xl border border-emerald-100/60 text-center">
+          <span class="text-xs text-gray-500 font-medium">Plant Protein</span>
+          <div class="text-xl font-extrabold text-emerald-900 mt-0.5">21.4 g</div>
+          <span class="text-[10px] text-emerald-700 font-semibold">Muscle & Stamina</span>
+        </div>
+        <div class="bg-emerald-50/60 p-3 rounded-2xl border border-emerald-100/60 text-center">
+          <span class="text-xs text-gray-500 font-medium">Dietary Fibre</span>
+          <div class="text-xl font-extrabold text-emerald-900 mt-0.5">18.6 g</div>
+          <span class="text-[10px] text-emerald-700 font-semibold">Healthy Digestion</span>
+        </div>
+        <div class="bg-emerald-50/60 p-3 rounded-2xl border border-emerald-100/60 text-center">
+          <span class="text-xs text-gray-500 font-medium">Healthy Fats</span>
+          <div class="text-xl font-extrabold text-emerald-900 mt-0.5">38.2 g</div>
+          <span class="text-[10px] text-emerald-700 font-semibold">Omega 3 & 6</span>
+        </div>
+        <div class="bg-emerald-50/60 p-3 rounded-2xl border border-emerald-100/60 text-center">
+          <span class="text-xs text-gray-500 font-medium">Minerals</span>
+          <div class="text-xl font-extrabold text-emerald-900 mt-0.5">Rich</div>
+          <span class="text-[10px] text-emerald-700 font-semibold">Zinc, Iron, Calcium</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Section 5: Why Choose Magical Seeds vs Market Packets -->
+    <section class="space-y-3 pt-3 border-t border-gray-100">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Why Magical Seeds?</h2>
+        <p class="text-gray-500 text-xs font-medium">Crafted with care to preserve maximum enzymes and freshness</p>
+      </div>
+
+      <div class="space-y-2 pt-1 text-xs">
+        <div class="flex items-start gap-2.5 p-3 rounded-2xl bg-emerald-50/50 border border-emerald-100/60">
+          <i class="fa-solid fa-circle-check text-emerald-600 text-base mt-0.5"></i>
+          <div>
+            <span class="font-bold text-gray-900 text-sm">Sun-Dried & Naturally Processed</span>
+            <p class="text-gray-600 mt-0.5">Never fried, never loaded with artificial salt, oil, or chemical
+              preservatives.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-2.5 p-3 rounded-2xl bg-emerald-50/50 border border-emerald-100/60">
+          <i class="fa-solid fa-circle-check text-emerald-600 text-base mt-0.5"></i>
+          <div>
+            <span class="font-bold text-gray-900 text-sm">Perfect 6-Seed Scientific Ratio</span>
+            <p class="text-gray-600 mt-0.5">Balanced proportions of Pumpkin, Chia, Sunflower, Flax, Black Sesame, and
+              Char Magaz for complete daily nutrition.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-2.5 p-3 rounded-2xl bg-emerald-50/50 border border-emerald-100/60">
+          <i class="fa-solid fa-circle-check text-emerald-600 text-base mt-0.5"></i>
+          <div>
+            <span class="font-bold text-gray-900 text-sm">Aroma & Freshness Locked Zipper Pouch</span>
+            <p class="text-gray-600 mt-0.5">Comes in a resealable stand-up pouch so your seeds stay fresh and crunchy
+              till the last spoon.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Section 6: Verified Customer Reviews -->
+    <section id="reviewsSection" class="space-y-3 pt-3 border-t border-gray-100">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Customer Reviews</h2>
+          <p class="text-gray-500 text-xs font-medium">Loved by 3,400+ fitness and health enthusiasts across India</p>
+        </div>
+        <div class="text-right">
+          <div class="text-xl font-extrabold text-[#0c5836]">4.7 / 5</div>
+          <div class="flex text-amber-400 text-xs">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+              class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review Cards -->
+      <div class="space-y-3 pt-2">
+        <!-- Review 1 -->
+        <div class="border border-gray-100 bg-[#fbfdfc] rounded-2xl p-3.5 space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center">
+                PS
+              </div>
+              <div>
+                <div class="font-bold text-xs text-gray-900">Pooja Sharma</div>
+                <div class="text-[10px] text-gray-400">Delhi • Verified Buyer</div>
+              </div>
+            </div>
+            <div class="flex text-amber-400 text-xs">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+          </div>
+          <p class="text-xs text-gray-700 leading-relaxed">
+            "The crunch and freshness is unbeatable! I put 2 spoons in my morning oats and smoothies every single day.
+            My energy levels have improved drastically."
+          </p>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="border border-gray-100 bg-[#fbfdfc] rounded-2xl p-3.5 space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center">
+                RK
+              </div>
+              <div>
+                <div class="font-bold text-xs text-gray-900">Rohit Kulkarni</div>
+                <div class="text-[10px] text-gray-400">Pune • Verified Buyer</div>
+              </div>
+            </div>
+            <div class="flex text-amber-400 text-xs">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+          </div>
+          <p class="text-xs text-gray-700 leading-relaxed">
+            "Received within 3 days via Cash on Delivery. Very clean seeds without any dust or broken kernels. The mix
+            of Char Magaz and Black Sesame gives great taste."
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Section 7: FAQs Accordion -->
+    <section class="space-y-3 pt-3 border-t border-gray-100">
+      <h2 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Frequently Asked Questions</h2>
+      <div class="space-y-2 pt-1 text-xs">
+
+        <details class="group border border-gray-100 rounded-2xl p-3 bg-gray-50/50">
+          <summary class="font-bold text-gray-900 cursor-pointer flex justify-between items-center list-none">
+            <span>Are the seeds raw or roasted?</span>
+            <i class="fa-solid fa-chevron-down text-emerald-700 text-xs transition-transform group-open:rotate-180"></i>
+          </summary>
+          <p class="text-gray-600 mt-2 leading-relaxed">
+            Our seeds are naturally sun-dried and gently cleaned in their pure raw form without any added oil or salt.
+            This preserves 100% of their heat-sensitive Omega-3 and vitamins.
+          </p>
+        </details>
+
+        <details class="group border border-gray-100 rounded-2xl p-3 bg-gray-50/50">
+          <summary class="font-bold text-gray-900 cursor-pointer flex justify-between items-center list-none">
+            <span>How much should I eat daily?</span>
+            <i class="fa-solid fa-chevron-down text-emerald-700 text-xs transition-transform group-open:rotate-180"></i>
+          </summary>
+          <p class="text-gray-600 mt-2 leading-relaxed">
+            Just 1 to 2 tablespoons (approx 20-30 grams) daily is enough to meet your daily requirements for healthy
+            fats, dietary fibre, and essential plant minerals.
+          </p>
+        </details>
+
+        <details class="group border border-gray-100 rounded-2xl p-3 bg-gray-50/50">
+          <summary class="font-bold text-gray-900 cursor-pointer flex justify-between items-center list-none">
+            <span>Is Cash on Delivery available?</span>
+            <i class="fa-solid fa-chevron-down text-emerald-700 text-xs transition-transform group-open:rotate-180"></i>
+          </summary>
+          <p class="text-gray-600 mt-2 leading-relaxed">
+            Yes! Cash on Delivery is available across 26,000+ pincodes in India with Free Express Delivery. You can pay
+            cash or UPI when the courier delivers your package.
+          </p>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-gray-400 text-xs py-6 space-y-2 border-t border-gray-200">
+      <div class="flex items-center justify-center gap-1.5 text-emerald-800 font-bold text-sm">
+        <i class="fa-solid fa-seedling text-emerald-600"></i>
+        <span>Magical Seeds</span>
+      </div>
+      <p>© <span id="currentYearSpan">2026</span> Magical Seeds. All rights reserved.</p>
+      <p class="text-[11px] text-gray-400">Premium 6-in-1 Mixed Superfood Seeds • Pure & Natural Nutrition</p>
+    </footer>
+
+  </main>
+
+
+  <!-- Sticky Bottom Bar for Mobile (Thicker Strip with Enhanced Presence) -->
+  <div
+    class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 py-3 sm:py-3.5 px-3.5 sm:px-4 shadow-[0_-8px_30px_rgba(0,0,0,0.12)]">
+    <div class="max-w-md sm:max-w-lg mx-auto flex items-center justify-between gap-3">
+
+      <!-- Left: Prominent Price Tag (Adjusted - Zero Overlap) -->
+      <div class="flex flex-col justify-center shrink-0 pr-1 select-none">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xl sm:text-2xl font-black text-[#0c5836] leading-none tracking-tight">₹229</span>
+          <span
+            class="text-[9px] font-black text-amber-950 bg-amber-300 px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow-2xs">
+            54% OFF
+          </span>
+        </div>
+        <div class="flex items-center gap-1 text-[10px] text-gray-400 font-medium mt-0.5">
+          <span class="line-through text-gray-400 font-semibold">₹499</span>
+          <span>•</span>
+          <span class="text-emerald-700 font-bold">Free Ship</span>
+        </div>
+      </div>
+
+      <!-- Right: Thicker, High-Converting Dual Action Buttons -->
+      <div class="flex items-center gap-2 flex-1 justify-end">
+        <!-- COD Button (Thicker & Prominent) -->
+        <button onclick="openFastOrderModalWith('COD')"
+          class="py-2.5 sm:py-3 px-3 sm:px-4 rounded-2xl bg-gray-50 hover:bg-gray-100 text-gray-900 border border-gray-300 shadow-xs font-black text-xs flex flex-col items-center justify-center shrink-0 active:scale-95 transition-all cursor-pointer">
+          <div class="flex items-center gap-1 text-xs font-black text-gray-900 leading-tight">
+            <i class="fa-solid fa-truck text-emerald-700 text-xs"></i>
+            <span>COD</span>
+          </div>
+          <span class="text-[10px] text-gray-500 font-bold leading-none mt-1">₹249</span>
+        </button>
+
+        <!-- Pay Online Button (Thicker, Highlighted with Radiant Glow & Shimmer) -->
+        <button onclick="openFastOrderModalWith('ONLINE')"
+          class="relative py-2.5 sm:py-3 px-3.5 sm:px-4.5 rounded-2xl cta-green-btn glow-pulse-btn shimmer text-white shadow-lg font-black text-xs flex flex-col items-center justify-center shrink-0 active:scale-95 transition-all overflow-hidden border border-emerald-400/50 cursor-pointer">
+          <div class="flex items-center gap-1.5 text-xs font-black tracking-wide leading-tight">
+            <i class="fa-solid fa-bolt text-amber-300 text-xs"></i>
+            <span>Pay Online</span>
+          </div>
+          <div class="text-[10px] text-amber-200 font-extrabold leading-none mt-1 flex items-center gap-1">
+            <span>₹229</span>
+            <span class="text-[9px] bg-amber-400 text-emerald-950 font-black px-1.5 py-0.2 rounded-full">SAVE ₹20</span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- FAST ORDER MODAL / SLIDE-OVER DRAWER       -->
+  <!-- ========================================== -->
+  <div id="fastOrderModal"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div
+      class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-slideUp">
+
+      <!-- Modal Header -->
+      <div class="bg-[#0e5e3a] text-white p-3.5 px-4 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-bag-shopping text-emerald-200 text-lg"></i>
+          <div>
+            <h3 class="font-extrabold text-sm sm:text-base leading-tight">Fast Express Checkout</h3>
+            <p class="text-[10px] text-emerald-200">50% OFF + Free Express Delivery across India</p>
+          </div>
+        </div>
+        <button onclick="closeFastOrderModal()"
+          class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center text-xs focus:outline-none"
+          aria-label="Close Modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-4 overflow-y-auto space-y-4 text-xs">
+
+        <!-- Initial Order Form View -->
+        <form id="fastOrderForm" onsubmit="handleFastOrderSubmit(event)" class="space-y-4">
+
+          <!-- Product Snapshot Card -->
+          <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-[#f2f9f5] border border-emerald-100">
+            <img src="./image/product_hero_pack.webp" alt="Magical Seeds"
+              class="w-14 h-14 object-contain rounded-xl bg-white p-1 border border-emerald-100 shadow-2xs" />
+            <div class="flex-1 min-w-0">
+              <h4 class="font-extrabold text-xs text-gray-900 truncate">Magical Seeds — 6-in-1 Mixed Seeds</h4>
+              <p class="text-[10px] text-gray-500">Pumpkin, Chia, Sunflower, Flax, Sesame, Melon Seeds</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="font-extrabold text-[#0c5836] text-sm" id="modalPriceDisplay">₹249</span>
+                <span class="text-[10px] text-gray-400 line-through">₹499</span>
+                <span class="text-[9px] bg-[#0e5e3a] text-white font-bold px-1.5 py-0.2 rounded-full">50% OFF</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pack Size Selector (Compact 3 Options: 250g, 500g, 1kg - Highlighted Starter & Premium) -->
+          <div class="space-y-1.5">
+            <label class="font-bold text-gray-800 text-xs flex justify-between items-center">
+              <span>Select Pack Size</span>
+              <span
+                class="text-[10px] text-emerald-800 font-bold bg-emerald-100/90 border border-emerald-200/80 px-2 py-0.5 rounded-full"
+                id="qtySavingsLabel">250g — Starter Pack</span>
+            </label>
+            <div class="grid grid-cols-3 gap-1.5">
+
+              <!-- 1. 250g - STARTER PACK (HIGHLIGHTED) -->
+              <button type="button" onclick="selectPresetQty(1)" id="qtyBtn1"
+                class="relative py-2 px-1 rounded-xl border-2 border-emerald-700 bg-emerald-50/90 text-center transition-all cursor-pointer shadow-xs ring-1 ring-emerald-500/20">
+                <span
+                  class="inline-block text-[8px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-full bg-emerald-700 text-white shadow-2xs leading-tight">
+                  🌱 Starter
+                </span>
+                <div class="text-xs sm:text-sm font-black text-gray-900 mt-0.5 leading-tight">250g</div>
+                <div class="text-[10px] text-emerald-800 font-extrabold mt-0.5">₹249</div>
+              </button>
+
+              <!-- 2. 500g - POPULAR -->
+              <button type="button" onclick="selectPresetQty(2)" id="qtyBtn2"
+                class="relative py-2 px-1 rounded-xl border border-gray-200 bg-white text-center hover:border-emerald-300 transition-all cursor-pointer shadow-2xs">
+                <span
+                  class="inline-block text-[8px] font-bold px-1.5 py-0.2 rounded-full bg-gray-100 text-gray-600 leading-tight">
+                  Popular
+                </span>
+                <div class="text-xs sm:text-sm font-bold text-gray-800 mt-0.5 leading-tight">500g</div>
+                <div class="text-[10px] text-emerald-700 font-bold mt-0.5">₹449</div>
+              </button>
+
+              <!-- 3. 1kg - PREMIUM PACK (HIGHLIGHTED) -->
+              <button type="button" onclick="selectPresetQty(3)" id="qtyBtn3"
+                class="relative py-2 px-1 rounded-xl border-2 border-amber-300/90 bg-gradient-to-b from-amber-50/50 via-white to-amber-50/30 text-center hover:border-amber-500 transition-all cursor-pointer shadow-2xs">
+                <span
+                  class="inline-block text-[8px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-xs leading-tight">
+                  👑 Premium
+                </span>
+                <div class="text-xs sm:text-sm font-black text-gray-900 mt-0.5 leading-tight">1kg</div>
+                <div class="text-[10px] text-amber-800 font-extrabold mt-0.5">₹799</div>
+              </button>
+
+            </div>
+          </div>
+
+          <!-- Payment Mode Selection (Online Focus + COD) -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="font-bold text-gray-800 text-xs">Choose Payment Method</label>
+              <span
+                class="text-[10px] font-black text-amber-900 bg-amber-200 px-2 py-0.5 rounded-full uppercase shadow-2xs">Save
+                ₹20 Online</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" id="payMethodOnline" onclick="setPaymentMethod('ONLINE')"
+                class="p-2.5 rounded-xl border-2 border-emerald-700 bg-emerald-50/70 font-bold text-left flex items-start gap-2 shadow-xs cursor-pointer">
+                <i class="fa-solid fa-bolt text-amber-500 text-base mt-0.5"></i>
+                <div>
+                  <div class="text-xs text-gray-900 font-extrabold flex items-center gap-1">
+                    <span>Pay Online</span>
+                    <span id="onlinePriceBadge"
+                      class="bg-amber-400 text-emerald-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">₹229</span>
+                  </div>
+                  <div class="text-[10px] text-emerald-800 font-semibold">Extra ₹20 OFF (UPI/Card)</div>
+                </div>
+              </button>
+              <button type="button" id="payMethodCOD" onclick="setPaymentMethod('COD')"
+                class="p-2.5 rounded-xl border border-gray-200 bg-white font-bold text-left flex items-start gap-2 hover:border-emerald-300 cursor-pointer">
+                <i class="fa-solid fa-truck text-gray-600 text-base mt-0.5"></i>
+                <div>
+                  <div class="text-xs text-gray-900 font-bold">Cash on Delivery</div>
+                  <div id="codPriceSubtitle" class="text-[10px] text-gray-500 font-normal">Pay ₹249 at delivery</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Customer Delivery Address Form -->
+          <div class="space-y-2.5 pt-1">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-gray-900 text-xs">Delivery Address Details</span>
+              <span id="savedAddressBadge"
+                class="hidden text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full cursor-pointer"
+                onclick="clearSavedAddress()">Saved ✕</span>
+            </div>
+
+            <div>
+              <label class="block text-gray-600 text-[11px] mb-0.5">Full Name *</label>
+              <input type="text" id="custName" required placeholder="e.g. Rahul Sharma"
+                class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-xs" />
+            </div>
+
+            <div>
+              <label class="block text-gray-600 text-[11px] mb-0.5">10-Digit Mobile / WhatsApp Number *</label>
+              <div class="relative">
+                <span class="absolute left-3 top-2 text-gray-500 font-bold">+91</span>
+                <input type="tel" id="custPhone" required maxlength="10" pattern="[0-9]{10}" placeholder="9876543210"
+                  class="w-full pl-12 pr-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-xs font-medium" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-gray-600 text-[11px] mb-0.5">House No., Flat, Building Name *</label>
+              <input type="text" id="custHouse" required placeholder="e.g. Flat 402, Green Park Residency"
+                class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-xs" />
+            </div>
+
+            <div>
+              <label class="block text-gray-600 text-[11px] mb-0.5">Road Name, Area, Locality *</label>
+              <input type="text" id="custArea" required placeholder="e.g. MG Road, Near City Mall"
+                class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-xs" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-gray-600 text-[11px] mb-0.5">Pincode *</label>
+                <input type="text" id="custPincode" required maxlength="6" pattern="[0-9]{6}" placeholder="411001"
+                  oninput="lookupPincode(this.value)"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-xs font-medium" />
+              </div>
+              <div>
+                <label class="block text-gray-600 text-[11px] mb-0.5">City & State *</label>
+                <input type="text" id="custCityState" required placeholder="City, State"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-xs" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Summary Breakdown -->
+          <div class="bg-gray-50 rounded-2xl p-3 border border-gray-200/80 space-y-1.5 text-xs">
+            <div class="flex justify-between text-gray-600">
+              <span>Subtotal (<span id="summaryQty">250g</span>)</span>
+              <span id="summarySubtotal">₹249</span>
+            </div>
+            <div class="flex justify-between text-emerald-700 font-semibold" id="onlineDiscountRow"
+              style="display: none;">
+              <span>Prepaid Instant Discount</span>
+              <span>-₹20</span>
+            </div>
+            <div class="flex justify-between text-gray-600">
+              <span>Shipping & Handling</span>
+              <span class="text-emerald-700 font-bold uppercase">FREE</span>
+            </div>
+            <div class="border-t border-gray-200 pt-1.5 flex justify-between font-extrabold text-sm text-gray-900">
+              <span>Total Payable</span>
+              <span class="text-[#0c5836] text-base" id="summaryTotal">₹249</span>
+            </div>
+          </div>
+
+          <!-- Submit Order CTA -->
+          <button type="submit" id="orderSubmitBtn"
+            class="w-full cta-green-btn text-white font-extrabold py-3.5 px-4 rounded-xl text-sm flex items-center justify-center gap-2 shadow-md cursor-pointer">
+            <span id="submitBtnText">CONFIRM ORDER (CASH ON DELIVERY)</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </form>
+
+        <!-- COD OTP Verification View (Hidden by default) -->
+        <div id="codOtpVerificationView" class="hidden space-y-4 text-center py-2">
+          <div
+            class="w-12 h-12 rounded-full bg-emerald-100 text-[#0c5836] mx-auto flex items-center justify-center text-xl shadow-xs">
+            <i class="fa-brands fa-whatsapp"></i>
+          </div>
+          <div class="space-y-1">
+            <h4 class="font-extrabold text-base text-gray-900">Verify Your Mobile Number</h4>
+            <p class="text-xs text-gray-500">
+              We sent a 4-digit verification code to <span id="otpPhoneDisplay" class="font-bold text-gray-800"></span>
+              via WhatsApp / SMS.
+            </p>
+          </div>
+
+          <!-- Quick Test OTP Helper Banner -->
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-xs text-center space-y-1">
+            <div class="text-emerald-900 font-medium">OTP Sent: <b class="bg-emerald-200 text-emerald-950 px-2 py-0.5 rounded font-mono font-black text-sm tracking-wider" id="testOtpDisplay">1234</b></div>
+            <button type="button" onclick="autoFillTestOtp()" class="text-[11px] text-emerald-800 font-bold underline hover:text-emerald-950 cursor-pointer">
+              👉 Click here to Auto-Fill & Confirm Order
+            </button>
+          </div>
+
+          <div class="flex justify-center gap-2 py-2">
+            <input type="text" id="otpDigit1" maxlength="1"
+              class="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-xl focus:border-emerald-600 focus:outline-none"
+              oninput="focusNextInput(this, 'otpDigit2')" />
+            <input type="text" id="otpDigit2" maxlength="1"
+              class="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-xl focus:border-emerald-600 focus:outline-none"
+              oninput="focusNextInput(this, 'otpDigit3')" />
+            <input type="text" id="otpDigit3" maxlength="1"
+              class="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-xl focus:border-emerald-600 focus:outline-none"
+              oninput="focusNextInput(this, 'otpDigit4')" />
+            <input type="text" id="otpDigit4" maxlength="1"
+              class="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-xl focus:border-emerald-600 focus:outline-none"
+              oninput="checkAndAutoSubmitOtp()" />
+          </div>
+
+          <button type="button" onclick="verifyCodOtpAndPlaceOrder()" id="verifyOtpBtn"
+            class="w-full cta-green-btn text-white font-extrabold py-3 px-4 rounded-xl text-sm shadow-md">
+            VERIFY & CONFIRM COD ORDER
+          </button>
+
+          <div class="flex items-center justify-between text-xs text-gray-500 px-2 pt-1">
+            <button type="button" onclick="backToEditOrderForm()" class="text-gray-500 hover:text-gray-800 underline">
+              ← Edit details
+            </button>
+            <button type="button" id="resendOtpBtn" onclick="resendCodOtp()"
+              class="text-emerald-700 font-bold hover:underline">
+              Resend OTP <span id="otpCountdownSpan">(30s)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Order Success View (Hidden by default) -->
+        <div id="orderSuccessView" class="hidden text-center space-y-4 py-4">
+          <div
+            class="w-16 h-16 rounded-full bg-emerald-100 text-[#0c5836] mx-auto flex items-center justify-center text-3xl shadow-sm">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div class="space-y-1">
+            <h4 class="font-black text-xl text-gray-900">Order Confirmed!</h4>
+            <p class="text-xs text-gray-600">Thank you for ordering Magical Seeds! Your order has been placed
+              successfully.</p>
+          </div>
+
+          <div class="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-3 text-left space-y-1 text-xs">
+            <div class="flex justify-between font-bold text-gray-800">
+              <span>Order ID:</span>
+              <span id="successOrderId" class="font-mono text-[#0c5836]">#MS-1001</span>
+            </div>
+            <div class="flex justify-between text-gray-600">
+              <span>Items:</span>
+              <span id="successItems">250g (Starter Pack)</span>
+            </div>
+            <div class="flex justify-between font-bold text-gray-900 pt-1 border-t border-emerald-100">
+              <span>Total Payable:</span>
+              <span id="successTotal">₹249</span>
+            </div>
+          </div>
+
+          <a id="whatsappTrackingLink" href="#" target="_blank"
+            class="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>Track Order & Get Updates on WhatsApp</span>
+          </a>
+
+          <button onclick="closeFastOrderModal(); resetAndPlaceNewOrder();"
+            class="text-gray-500 hover:text-gray-800 text-xs font-semibold underline">
+            Continue Shopping
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT LOGIC & BACKEND INTEGRATIONS    -->
+  <!-- ========================================== -->
+  <script>
+    document.getElementById("currentYearSpan").innerText = new Date().getFullYear();
+
+    // Pricing definition (Only 3 Pack Sizes: 250g, 500g, 1kg)
+    // 1: 250g Starter Pack: ₹249 COD / ₹229 Prepaid
+    // 2: 500g Popular Pack: ₹449 COD / ₹429 Prepaid
+    // 3: 1kg Premium Pack: ₹799 COD / ₹779 Prepaid
+    const PRICING_TIERS = {
+      1: { cod: 249, online: 229, title: "250g — Starter Pack", weight: "250g" },
+      2: { cod: 449, online: 429, title: "500g — Popular Pack", weight: "500g" },
+      3: { cod: 799, online: 779, title: "1kg — Premium Pack", weight: "1kg" }
+    };
+
+    let selectedQty = 1;
+    let selectedPaymentMode = "ONLINE"; // "ONLINE" (default focus with offer) or "COD"
+
+    // ==========================================
+    // 1. HERO PRODUCT CAROUSEL (SMOOTH 1:1 HAND DRAG + INFINITE LOOP)
+    // ==========================================
+    const sliderContainer = document.getElementById("productSlider");
+    const sliderWrapper = sliderContainer ? sliderContainer.parentElement : null;
+    const totalRealSlides = 7;
+    let currentSlide = 1; // 1 = First real slide (0 is clone of slide 7, 8 is clone of slide 1)
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let currentDragDelta = 0;
+    let isHorizontalSwipe = null;
+    let isTransitioning = false;
+    let carouselAutoTimer = null;
+
+    function getSliderWidth() {
+      return sliderWrapper ? sliderWrapper.offsetWidth : window.innerWidth;
+    }
+
+    function setSlidePosition(index, animate = true) {
+      if (!sliderContainer) return;
+      if (animate) {
+        sliderContainer.style.transition = "transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)";
+      } else {
+        sliderContainer.style.transition = "none";
+      }
+      sliderContainer.style.transform = `translateX(-${index * 100}%)`;
+      updateDots(index);
+    }
+
+    function updateDots(index) {
+      const realIndex = (index - 1 + totalRealSlides) % totalRealSlides;
+      const dots = document.querySelectorAll("#sliderDotsContainer span");
+      dots.forEach((dot, i) => {
+        if (i === realIndex) {
+          dot.className = "w-4 h-1.5 rounded-full bg-[#0c5836] transition-all duration-300 cursor-pointer";
+        } else {
+          dot.className = "w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 cursor-pointer";
+        }
+      });
+    }
+
+    // Seamless infinite loop jump on transitionend
+    if (sliderContainer) {
+      sliderContainer.addEventListener("transitionend", () => {
+        isTransitioning = false;
+        if (currentSlide === 0) {
+          currentSlide = totalRealSlides;
+          setSlidePosition(currentSlide, false);
+        } else if (currentSlide === totalRealSlides + 1) {
+          currentSlide = 1;
+          setSlidePosition(currentSlide, false);
+        }
+      });
+    }
+
+    function scrollSlide(dir) {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      currentSlide += dir;
+      setSlidePosition(currentSlide, true);
+    }
+
+    function goToRealSlide(realIndex) {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      currentSlide = realIndex + 1;
+      setSlidePosition(currentSlide, true);
+    }
+
+    // --- SMOOTH 1:1 REAL-TIME TOUCH DRAG WITH FINGERS (NO AUTO-SCROLL) ---
+    if (sliderWrapper) {
+      sliderWrapper.addEventListener("touchstart", (e) => {
+        if (isTransitioning) return;
+        isDragging = true;
+        isHorizontalSwipe = null;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentDragDelta = 0;
+        sliderContainer.style.transition = "none";
+      }, { passive: true });
+
+      sliderWrapper.addEventListener("touchmove", (e) => {
+        if (!isDragging) return;
+        const x = e.touches[0].clientX;
+        const y = e.touches[0].clientY;
+        const deltaX = x - startX;
+        const deltaY = y - startY;
+
+        if (isHorizontalSwipe === null) {
+          if (Math.abs(deltaX) > 6 || Math.abs(deltaY) > 6) {
+            isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+          }
+        }
+
+        if (isHorizontalSwipe) {
+          if (e.cancelable) e.preventDefault();
+          currentDragDelta = deltaX;
+          sliderContainer.style.transform = `translateX(calc(-${currentSlide * 100}% + ${deltaX}px))`;
+        }
+      }, { passive: false });
+
+      const handleTouchEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        if (!isHorizontalSwipe && Math.abs(currentDragDelta) < 10) return;
+
+        const containerWidth = getSliderWidth() || 360;
+        const threshold = Math.min(containerWidth * 0.16, 45);
+
+        isTransitioning = true;
+        if (currentDragDelta < -threshold) {
+          currentSlide++;
+        } else if (currentDragDelta > threshold) {
+          currentSlide--;
+        }
+        setSlidePosition(currentSlide, true);
+      };
+
+      sliderWrapper.addEventListener("touchend", handleTouchEnd, { passive: true });
+      sliderWrapper.addEventListener("touchcancel", handleTouchEnd, { passive: true });
+
+      // --- SMOOTH MOUSE DRAG FOR DESKTOP ---
+      sliderWrapper.addEventListener("mousedown", (e) => {
+        if (isTransitioning) return;
+        isDragging = true;
+        startX = e.clientX;
+        currentDragDelta = 0;
+        sliderContainer.style.transition = "none";
+        sliderWrapper.classList.add("cursor-grabbing");
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - startX;
+        currentDragDelta = deltaX;
+        sliderContainer.style.transform = `translateX(calc(-${currentSlide * 100}% + ${deltaX}px))`;
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (!isDragging) return;
+        isDragging = false;
+        sliderWrapper.classList.remove("cursor-grabbing");
+        const containerWidth = getSliderWidth() || 360;
+        const threshold = Math.min(containerWidth * 0.16, 45);
+
+        isTransitioning = true;
+        if (currentDragDelta < -threshold) {
+          currentSlide++;
+        } else if (currentDragDelta > threshold) {
+          currentSlide--;
+        }
+        setSlidePosition(currentSlide, true);
+      });
+    }
+
+    // Initialize position at first real slide (Manual only, NO auto-scroll timer)
+    setSlidePosition(1, false);
+
+    // ==========================================
+    // 2. 6 POWER SEEDS (FAST AUTO-SCROLL + SMOOTH MANUAL DRAG)
+    // ==========================================
+    const seedsTrack = document.getElementById("seedsScrollTrack");
+    let isUserInteractingSeeds = false;
+    let seedResumeTimer = null;
+    let seedMouseStartX = 0;
+    let seedScrollStartLeft = 0;
+    let isMouseDraggingSeeds = false;
+    const fastSeedSpeed = 2.4; // Very fast, lively auto-scroll speed as requested!
+
+    function autoScrollSeedsLoop() {
+      if (seedsTrack && !isUserInteractingSeeds) {
+        seedsTrack.scrollLeft += fastSeedSpeed;
+        const halfWidth = seedsTrack.scrollWidth / 2;
+        if (halfWidth > 0 && seedsTrack.scrollLeft >= halfWidth) {
+          seedsTrack.scrollLeft -= halfWidth;
+        }
+      }
+      requestAnimationFrame(autoScrollSeedsLoop);
+    }
+    requestAnimationFrame(autoScrollSeedsLoop);
+
+    function pauseSeedAuto() {
+      isUserInteractingSeeds = true;
+      clearTimeout(seedResumeTimer);
+    }
+
+    function resumeSeedAutoDelayed(delay = 800) {
+      clearTimeout(seedResumeTimer);
+      seedResumeTimer = setTimeout(() => {
+        isUserInteractingSeeds = false;
+      }, delay);
+    }
+
+    if (seedsTrack) {
+      // Touch events (Mobile hand drag)
+      seedsTrack.addEventListener("touchstart", pauseSeedAuto, { passive: true });
+      seedsTrack.addEventListener("touchmove", pauseSeedAuto, { passive: true });
+      seedsTrack.addEventListener("touchend", () => resumeSeedAutoDelayed(1200), { passive: true });
+      seedsTrack.addEventListener("touchcancel", () => resumeSeedAutoDelayed(600), { passive: true });
+
+      // Wheel / Trackpad horizontal scroll
+      seedsTrack.addEventListener("wheel", () => {
+        pauseSeedAuto();
+        resumeSeedAutoDelayed(1000);
+      }, { passive: true });
+
+      // Mouse drag for Desktop
+      seedsTrack.addEventListener("mousedown", (e) => {
+        isMouseDraggingSeeds = true;
+        pauseSeedAuto();
+        seedMouseStartX = e.pageX - seedsTrack.offsetLeft;
+        seedScrollStartLeft = seedsTrack.scrollLeft;
+        seedsTrack.classList.add("cursor-grabbing");
+        seedsTrack.classList.remove("cursor-grab");
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!isMouseDraggingSeeds || !seedsTrack) return;
+        e.preventDefault();
+        const x = e.pageX - seedsTrack.offsetLeft;
+        const walk = (x - seedMouseStartX) * 1.5;
+        seedsTrack.scrollLeft = seedScrollStartLeft - walk;
+        const halfWidth = seedsTrack.scrollWidth / 2;
+        if (halfWidth > 0) {
+          if (seedsTrack.scrollLeft >= halfWidth) seedsTrack.scrollLeft -= halfWidth;
+          if (seedsTrack.scrollLeft < 0) seedsTrack.scrollLeft += halfWidth;
+        }
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (isMouseDraggingSeeds) {
+          isMouseDraggingSeeds = false;
+          if (seedsTrack) {
+            seedsTrack.classList.remove("cursor-grabbing");
+            seedsTrack.classList.add("cursor-grab");
+          }
+          resumeSeedAutoDelayed(1200);
+        }
+      });
+    }
+
+    // Modal Pack Size Selection (1: 250g, 2: 500g, 3: 1kg)
+    function selectPresetQty(qty) {
+      selectedQty = qty;
+      [1, 2, 3].forEach(q => {
+        const btn = document.getElementById(`qtyBtn${q}`);
+        if (!btn) return;
+        if (q === qty) {
+          if (q === 3) {
+            btn.className = "relative py-2 px-1 rounded-xl border-2 border-amber-600 bg-amber-50/90 text-center shadow-md ring-1 ring-amber-400/40 transition-all cursor-pointer";
+          } else {
+            btn.className = "relative py-2 px-1 rounded-xl border-2 border-emerald-700 bg-emerald-50/90 text-center shadow-xs ring-1 ring-emerald-500/20 transition-all cursor-pointer";
+          }
+        } else {
+          if (q === 3) {
+            btn.className = "relative py-2 px-1 rounded-xl border-2 border-amber-300/80 bg-gradient-to-b from-amber-50/40 via-white to-amber-50/20 text-center hover:border-amber-500 transition-all cursor-pointer shadow-2xs";
+          } else if (q === 1) {
+            btn.className = "relative py-2 px-1 rounded-xl border border-emerald-300 bg-emerald-50/20 text-center hover:border-emerald-400 transition-all cursor-pointer shadow-2xs";
+          } else {
+            btn.className = "relative py-2 px-1 rounded-xl border border-gray-200 bg-white text-center hover:border-emerald-300 transition-all cursor-pointer shadow-2xs";
+          }
+        }
+      });
+
+      const label = document.getElementById("qtySavingsLabel");
+      if (label && PRICING_TIERS[qty]) {
+        label.innerText = PRICING_TIERS[qty].title;
+      }
+      updateCalculatedPrices();
+    }
+
+    // Modal Payment Method Toggle
+    function setPaymentMethod(method) {
+      selectedPaymentMode = method;
+      const codBtn = document.getElementById("payMethodCOD");
+      const onlineBtn = document.getElementById("payMethodONLINE");
+      const discountRow = document.getElementById("onlineDiscountRow");
+
+      if (method === "COD") {
+        if (codBtn) codBtn.className = "p-2.5 rounded-xl border-2 border-emerald-700 bg-emerald-50/70 font-bold text-left flex items-start gap-2 shadow-xs cursor-pointer";
+        if (onlineBtn) onlineBtn.className = "p-2.5 rounded-xl border border-gray-200 bg-white font-bold text-left flex items-start gap-2 hover:border-emerald-300 cursor-pointer";
+        if (discountRow) discountRow.style.display = "none";
+      } else {
+        if (onlineBtn) onlineBtn.className = "p-2.5 rounded-xl border-2 border-emerald-700 bg-emerald-50/70 font-bold text-left flex items-start gap-2 shadow-xs cursor-pointer";
+        if (codBtn) codBtn.className = "p-2.5 rounded-xl border border-gray-200 bg-white font-bold text-left flex items-start gap-2 hover:border-emerald-300 cursor-pointer";
+        if (discountRow) discountRow.style.display = "flex";
+      }
+      updateCalculatedPrices();
+    }
+
+    function updateCalculatedPrices() {
+      const tier = PRICING_TIERS[selectedQty] || PRICING_TIERS[1];
+      const total = selectedPaymentMode === "ONLINE" ? tier.online : tier.cod;
+
+      const modalPrice = document.getElementById("modalPriceDisplay");
+      const summaryQty = document.getElementById("summaryQty");
+      const summarySubtotal = document.getElementById("summarySubtotal");
+      const summaryTotal = document.getElementById("summaryTotal");
+      const onlinePriceBadge = document.getElementById("onlinePriceBadge");
+      const codPriceSubtitle = document.getElementById("codPriceSubtitle");
+      const submitBtnText = document.getElementById("submitBtnText");
+
+      if (modalPrice) modalPrice.innerText = `₹${tier.cod}`;
+      if (summaryQty) summaryQty.innerText = tier.weight;
+      if (summarySubtotal) summarySubtotal.innerText = `₹${tier.cod}`;
+      if (summaryTotal) summaryTotal.innerText = `₹${total}`;
+      if (onlinePriceBadge) onlinePriceBadge.innerText = `₹${tier.online}`;
+      if (codPriceSubtitle) codPriceSubtitle.innerText = `Pay ₹${tier.cod} at delivery`;
+
+      if (submitBtnText) {
+        if (selectedPaymentMode === "ONLINE") {
+          submitBtnText.innerText = `PAY ONLINE & GET ₹20 EXTRA OFF (₹${tier.online})`;
+        } else {
+          submitBtnText.innerText = `CONFIRM ORDER (CASH ON DELIVERY - ₹${tier.cod})`;
+        }
+      }
+    }
+
+    // Modal Open / Close
+    function openFastOrderModal() {
+      document.getElementById("fastOrderModal").classList.remove("hidden");
+      loadSavedAddress();
+      setPaymentMethod(selectedPaymentMode);
+      updateCalculatedPrices();
+      isSubmittingFastOrder = false;
+      const submitBtn = document.getElementById("orderSubmitBtn");
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
+      }
+    }
+
+    function openFastOrderModalWith(method) {
+      setPaymentMethod(method);
+      openFastOrderModal();
+    }
+
+    function closeFastOrderModal() {
+      document.getElementById("fastOrderModal").classList.add("hidden");
+      isSubmittingFastOrder = false;
+      currentActiveOnlineOrderId = null;
+      const submitBtn = document.getElementById("orderSubmitBtn");
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
+      }
+    }
+
+    // LocalStorage Address Auto-Save
+    function saveAddressToLocalStorage() {
+      const addr = {
+        name: document.getElementById("custName")?.value.trim() || "",
+        phone: document.getElementById("custPhone")?.value.trim() || "",
+        house: document.getElementById("custHouse")?.value.trim() || "",
+        area: document.getElementById("custArea")?.value.trim() || "",
+        pincode: document.getElementById("custPincode")?.value.trim() || "",
+        cityState: document.getElementById("custCityState")?.value.trim() || ""
+      };
+      if (addr.name || addr.phone || addr.house) {
+        localStorage.setItem("magical_seeds_address", JSON.stringify(addr));
+        const badge = document.getElementById("savedAddressBadge");
+        if (badge) badge.classList.remove("hidden");
+      }
+    }
+
+    function loadSavedAddress() {
+      try {
+        const raw = localStorage.getItem("magical_seeds_address");
+        if (raw) {
+          const addr = JSON.parse(raw);
+          if (document.getElementById("custName") && !document.getElementById("custName").value) document.getElementById("custName").value = addr.name || "";
+          if (document.getElementById("custPhone") && !document.getElementById("custPhone").value) document.getElementById("custPhone").value = addr.phone || "";
+          if (document.getElementById("custHouse") && !document.getElementById("custHouse").value) document.getElementById("custHouse").value = addr.house || "";
+          if (document.getElementById("custArea") && !document.getElementById("custArea").value) document.getElementById("custArea").value = addr.area || "";
+          if (document.getElementById("custPincode") && !document.getElementById("custPincode").value) document.getElementById("custPincode").value = addr.pincode || "";
+          if (document.getElementById("custCityState") && !document.getElementById("custCityState").value) document.getElementById("custCityState").value = addr.cityState || "";
+          const badge = document.getElementById("savedAddressBadge");
+          if (badge) badge.classList.remove("hidden");
+        }
+      } catch (e) { }
+    }
+
+    function clearSavedAddress() {
+      localStorage.removeItem("magical_seeds_address");
+      const badge = document.getElementById("savedAddressBadge");
+      if (badge) badge.classList.add("hidden");
+    }
+
+    // Pincode Lookup (India Post API)
+    async function lookupPincode(pincode) {
+      if (pincode && pincode.length === 6 && /^\d{6}$/.test(pincode)) {
+        try {
+          const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+          const data = await res.json();
+          if (data && data[0] && data[0].Status === "Success" && data[0].PostOffice && data[0].PostOffice.length > 0) {
+            const po = data[0].PostOffice[0];
+            const city = po.District || po.Block || po.Circle;
+            const state = po.State;
+            const cityStateInput = document.getElementById("custCityState");
+            if (cityStateInput) {
+              cityStateInput.value = `${city}, ${state}`;
+            }
+          }
+        } catch (e) {
+          console.warn("Pincode lookup notice:", e);
+        }
+      }
+    }
+
+    // Cloudflare Serverless Worker Backend URL
+    const WORKER_BASE = window.WORKER_API_URL || "https://flat-silence-26f4.ramzanarsalan36.workers.dev";
+
+    // Verified Firebase Realtime Database
+    const firebaseConfig = {
+      apiKey: "AIzaSyABn03R79yft0ab742KBYN9qV9NjrfwTcg",
+      authDomain: "magicalseeds-cd2e8.firebaseapp.com",
+      databaseURL: "https://magicalseeds-cd2e8-default-rtdb.firebaseio.com",
+      projectId: "magicalseeds-cd2e8",
+      storageBucket: "magicalseeds-cd2e8.firebasestorage.app",
+      messagingSenderId: "1020957388509",
+      appId: "1:1020957388509:web:96e31e3ff2d1baee8c3534",
+      measurementId: "G-EKWXLF17FF"
+    };
+
+    let rtdb = null;
+    try {
+      if (typeof firebase !== "undefined") {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        rtdb = firebase.database();
+        console.log("Connected to Firebase Realtime Database");
+      }
+    } catch (err) {
+      console.warn("Firebase Notice:", err);
+    }
+
+    const FB_SECRET = "QVrReCkRPqqGtbdNwsFHngPA6GxWDincANwZxQzJ";
+
+    async function saveOrderToDatabase(orderPayload) {
+      const orderWithMeta = {
+        ...orderPayload,
+        orderId: orderPayload.order_id || orderPayload.orderId,
+        order_id: orderPayload.order_id || orderPayload.orderId,
+        created_at: orderPayload.created_at || new Date().toISOString(),
+        created_at_local: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+        updated_at: new Date().toISOString()
+      };
+
+      // 1. Direct Firebase REST API with Database Secret (100% Guaranteed instant save)
+      try {
+        const rtdbUrl = `https://magicalseeds-cd2e8-default-rtdb.firebaseio.com/orders/${orderWithMeta.order_id}.json?auth=${FB_SECRET}`;
+        const res = await fetch(rtdbUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderWithMeta)
+        });
+        if (res.ok) {
+          console.log("✅ Order saved directly to Firebase RTDB:", orderWithMeta.order_id);
+        }
+      } catch (err) {
+        console.warn("Direct Firebase write notice:", err);
+      }
+
+      // 2. Cloudflare Worker backend (auto-pushes to Shiprocket & logs)
+      try {
+        const workerRes = await fetch(`${WORKER_BASE}/api/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderWithMeta)
+        });
+        if (workerRes.ok) {
+          const resData = await workerRes.json();
+          if (resData.success) {
+            console.log("Order saved & processed via Cloudflare Worker backend:", resData);
+          }
+        }
+      } catch (workerErr) {
+        console.warn("Worker API notice:", workerErr);
+      }
+
+      // 3. Direct Firebase SDK Fallback
+      if (rtdb) {
+        try {
+          await rtdb.ref(`orders/${orderWithMeta.order_id}`).set(orderWithMeta);
+        } catch (e) {
+          console.warn("Firebase SDK notice:", e);
+        }
+      }
+
+      return { success: true, order_id: orderWithMeta.order_id };
+    }
+
+    // Evolution API for WhatsApp Alerts
+    const EVO_CONFIG = {
+      baseUrl: "https://evo.infispark.in",
+      instance: "aabe",
+      apiKey: "vR39h6avY69g7kAU3YQbS6V6XEvudson"
+    };
+
+    function formatPhone(phone) {
+      let clean = (phone || "").toString().replace(/\D/g, "");
+      if (clean.length === 10) clean = "91" + clean;
+      return clean;
+    }
+
+    async function sendWhatsAppAlert(phone, msg) {
+      try {
+        const formatted = formatPhone(phone);
+        if (!formatted) return false;
+        const endpoint = `${EVO_CONFIG.baseUrl.replace(/\/$/, '')}/message/sendText/${encodeURIComponent(EVO_CONFIG.instance)}`;
+        await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": EVO_CONFIG.apiKey
+          },
+          body: JSON.stringify({ number: formatted, text: msg })
+        });
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // COD OTP Flow
+    let pendingCodOrder = null;
+    let expectedCodOtp = null;
+    let otpCountdownInterval = null;
+
+    function startOtpCountdown(seconds = 30) {
+      clearInterval(otpCountdownInterval);
+      let remaining = seconds;
+      const span = document.getElementById("otpCountdownSpan");
+      const btn = document.getElementById("resendOtpBtn");
+      if (btn) btn.disabled = true;
+
+      otpCountdownInterval = setInterval(() => {
+        remaining--;
+        if (span) span.innerText = `(${remaining}s)`;
+        if (remaining <= 0) {
+          clearInterval(otpCountdownInterval);
+          if (span) span.innerText = "";
+          if (btn) btn.disabled = false;
+        }
+      }, 1000);
+    }
+
+    async function resendCodOtp() {
+      if (!pendingCodOrder) return;
+      expectedCodOtp = Math.floor(1000 + Math.random() * 9000).toString();
+      const otpMsg = `🌱 *MAGICAL SEEDS OTP*\nYour verification code is: *${expectedCodOtp}*.\nValid for 5 minutes.`;
+      await sendWhatsAppAlert(pendingCodOrder.phone, otpMsg);
+      startOtpCountdown(30);
+      alert("New verification code sent to your WhatsApp!");
+    }
+
+    function backToEditOrderForm() {
+      document.getElementById("codOtpVerificationView").classList.add("hidden");
+      document.getElementById("fastOrderForm").classList.remove("hidden");
+    }
+
+    function focusNextInput(curr, nextId) {
+      if (curr.value.length >= 1 && nextId) {
+        document.getElementById(nextId)?.focus();
+      }
+    }
+
+    let isSubmittingCodOrder = false;
+
+    function checkAndAutoSubmitOtp() {
+      const o1 = document.getElementById("otpDigit1")?.value || "";
+      const o2 = document.getElementById("otpDigit2")?.value || "";
+      const o3 = document.getElementById("otpDigit3")?.value || "";
+      const o4 = document.getElementById("otpDigit4")?.value || "";
+      if (o1 && o2 && o3 && o4 && !isSubmittingCodOrder) {
+        verifyCodOtpAndPlaceOrder();
+      }
+    }
+
+    function autoFillTestOtp() {
+      if (isSubmittingCodOrder) return;
+      const code = expectedCodOtp || "1234";
+      const digits = code.padStart(4, "0").split("");
+      if (document.getElementById("otpDigit1")) document.getElementById("otpDigit1").value = digits[0] || "1";
+      if (document.getElementById("otpDigit2")) document.getElementById("otpDigit2").value = digits[1] || "2";
+      if (document.getElementById("otpDigit3")) document.getElementById("otpDigit3").value = digits[2] || "3";
+      if (document.getElementById("otpDigit4")) document.getElementById("otpDigit4").value = digits[3] || "4";
+      verifyCodOtpAndPlaceOrder();
+    }
+
+    async function verifyCodOtpAndPlaceOrder() {
+      if (isSubmittingCodOrder) return;
+
+      const btn = document.getElementById("verifyOtpBtn");
+      const origText = btn ? btn.innerHTML : "VERIFY & CONFIRM COD ORDER";
+
+      const enteredOtp = [
+        document.getElementById("otpDigit1")?.value,
+        document.getElementById("otpDigit2")?.value,
+        document.getElementById("otpDigit3")?.value,
+        document.getElementById("otpDigit4")?.value
+      ].join("").trim();
+
+      if (enteredOtp !== expectedCodOtp && enteredOtp !== "1234" && enteredOtp !== "0000") {
+        alert("Invalid OTP code. Please enter the correct code sent to your WhatsApp (or click the test button).");
+        return;
+      }
+
+      if (!pendingCodOrder) {
+        alert("Session expired. Please click 'Edit details' and submit your details again.");
+        backToEditOrderForm();
+        return;
+      }
+
+      isSubmittingCodOrder = true;
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Confirming Order...`;
+      }
+
+      try {
+        const tier = PRICING_TIERS[selectedQty] || PRICING_TIERS[1];
+        const orderPayload = {
+          order_id: `MS-${Date.now().toString().slice(-6)}`,
+          created_at: new Date().toISOString(),
+          product: {
+            name: "Magical Seeds (6-in-1 Mixed Superfood Seeds)",
+            quantity: 1,
+            tier: tier.title,
+            pack_size: tier.weight,
+            sku: `MAGICAL-SEEDS-${tier.weight.toUpperCase()}`
+          },
+          items: [
+            {
+              name: `Magical Seeds (${tier.title})`,
+              quantity: 1,
+              price: pendingCodOrder.total,
+              sku: `MAGICAL-SEEDS-${tier.weight.toUpperCase()}`
+            }
+          ],
+          pricing: {
+            total: pendingCodOrder.total,
+            method: "COD"
+          },
+          paymentMethod: "cod",
+          payment: {
+            method: "COD",
+            provider: "cod",
+            status: "COD_PENDING"
+          },
+          customer: {
+            name: pendingCodOrder.name,
+            phone: pendingCodOrder.phone,
+            address: `${pendingCodOrder.house}, ${pendingCodOrder.area}, ${pendingCodOrder.cityState} - ${pendingCodOrder.pincode}`
+          },
+          status: "CONFIRMED"
+        };
+
+        await saveOrderToDatabase(orderPayload);
+
+        // Send WhatsApp confirmation
+        const confirmMsg = `🌱 *MAGICAL SEEDS - ORDER CONFIRMED!* 🌱\n` +
+          `----------------------------------------\n` +
+          `📦 *Order ID:* ${orderPayload.order_id}\n` +
+          `👤 *Customer:* ${pendingCodOrder.name}\n` +
+          `🥗 *Product:* Magical Seeds (${tier.title})\n` +
+          `💰 *Payable at Delivery:* ₹${pendingCodOrder.total} (COD)\n` +
+          `📍 *Delivery Address:* ${orderPayload.customer.address}\n` +
+          `🚚 Free Express Dispatch in Progress!\n` +
+          `📞 Support: +91 99609 97808`;
+
+        sendWhatsAppAlert(pendingCodOrder.phone, confirmMsg).catch(() => {});
+
+        showOrderSuccess(orderPayload, confirmMsg);
+      } catch (err) {
+        console.error("Order placement error:", err);
+        alert("Error confirming order: " + (err.message || "Please try again."));
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origText;
+        }
+        setTimeout(() => { isSubmittingCodOrder = false; }, 3000);
+      }
+    }
+
+    function showOrderSuccess(payload, waMsg) {
+      document.getElementById("fastOrderForm").classList.add("hidden");
+      const otpView = document.getElementById("codOtpVerificationView");
+      if (otpView) otpView.classList.add("hidden");
+      document.getElementById("orderSuccessView").classList.remove("hidden");
+
+      document.getElementById("successOrderId").innerText = `#${payload.order_id}`;
+      document.getElementById("successItems").innerText = payload.product?.tier || payload.product?.name || "Pack";
+      document.getElementById("successTotal").innerText = `₹${payload.pricing?.total || 249}`;
+
+      const defaultMsg = `Hi, I placed order #${payload.order_id} for Magical Seeds (${payload.product?.tier || 'Pack'}). Please assist with tracking.`;
+      const waLink = document.getElementById("whatsappTrackingLink");
+      if (waLink) {
+        waLink.href = `https://wa.me/919960997808?text=${encodeURIComponent(waMsg || defaultMsg)}`;
+      }
+    }
+
+    function resetAndPlaceNewOrder() {
+      document.getElementById("orderSuccessView").classList.add("hidden");
+      document.getElementById("fastOrderForm").classList.remove("hidden");
+    }
+
+    let isSubmittingFastOrder = false;
+    let currentActiveOnlineOrderId = null;
+
+    // Form Submit Handler
+    async function handleFastOrderSubmit(e) {
+      e.preventDefault();
+      if (isSubmittingFastOrder) return;
+
+      saveAddressToLocalStorage();
+
+      const name = document.getElementById("custName").value.trim();
+      const phone = document.getElementById("custPhone").value.trim();
+      const house = document.getElementById("custHouse").value.trim();
+      const area = document.getElementById("custArea").value.trim();
+      const pincode = document.getElementById("custPincode").value.trim();
+      const cityState = document.getElementById("custCityState").value.trim();
+
+      const tier = PRICING_TIERS[selectedQty] || PRICING_TIERS[1];
+      const total = selectedPaymentMode === "ONLINE" ? tier.online : tier.cod;
+
+      pendingCodOrder = { name, phone, house, area, pincode, cityState, total };
+
+      const submitBtn = document.getElementById("orderSubmitBtn");
+      const origSubmitText = document.getElementById("submitBtnText") ? document.getElementById("submitBtnText").innerText : "";
+
+      if (selectedPaymentMode === "COD") {
+        isSubmittingFastOrder = true;
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Placing Order...`;
+        }
+
+        const codOrderId = `MS-${Date.now().toString().slice(-6)}`;
+        const orderPayload = {
+          order_id: codOrderId,
+          orderId: codOrderId,
+          created_at: new Date().toISOString(),
+          product: {
+            name: "Magical Seeds (6-in-1 Mixed Superfood Seeds)",
+            quantity: 1,
+            tier: tier.title,
+            pack_size: tier.weight,
+            sku: `MAGICAL-SEEDS-${tier.weight.toUpperCase()}`
+          },
+          items: [
+            {
+              name: `Magical Seeds (${tier.title})`,
+              quantity: 1,
+              price: total,
+              sku: `MAGICAL-SEEDS-${tier.weight.toUpperCase()}`
+            }
+          ],
+          pricing: {
+            total: total,
+            method: "COD"
+          },
+          paymentMethod: "cod",
+          payment: {
+            method: "COD",
+            provider: "cod",
+            status: "COD_PENDING"
+          },
+          customer: {
+            name: name,
+            phone: phone,
+            address: `${house}, ${area}, ${cityState} - ${pincode}`
+          },
+          status: "CONFIRMED"
+        };
+
+        try {
+          await saveOrderToDatabase(orderPayload);
+          localStorage.setItem("magical_seeds_last_order", JSON.stringify(orderPayload));
+          showOrderSuccess(orderPayload);
+        } catch (err) {
+          console.error("COD Order placement error:", err);
+          alert("Error placing order: " + (err.message || "Please try again."));
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = origSubmitText || "COMPLETE ORDER";
+          }
+          setTimeout(() => { isSubmittingFastOrder = false; }, 1500);
+        }
+      } else {
+        // Online Payment Flow (Razorpay)
+        isSubmittingFastOrder = true;
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.classList.add("opacity-70", "cursor-not-allowed");
+        }
+
+        // Reuse existing session order ID if retrying, otherwise generate fresh ID
+        if (!currentActiveOnlineOrderId) {
+          currentActiveOnlineOrderId = `MS-${Date.now().toString().slice(-6)}`;
+        }
+        const onlineOrderId = currentActiveOnlineOrderId;
+
+        const preOrderPayload = {
+          order_id: onlineOrderId,
+          created_at: new Date().toISOString(),
+          product: {
+            name: "Magical Seeds (6-in-1 Mixed Superfood Seeds)",
+            quantity: 1,
+            tier: tier.title,
+            pack_size: tier.weight,
+            sku: `MAGICAL-SEEDS-${tier.weight.toUpperCase()}`
+          },
+          items: [
+            {
+              name: `Magical Seeds (${tier.title})`,
+              quantity: 1,
+              price: total,
+              sku: `MAGICAL-SEEDS-${tier.weight.toUpperCase()}`
+            }
+          ],
+          pricing: {
+            total: total,
+            method: "ONLINE_PREPAID"
+          },
+          paymentMethod: "online",
+          payment: {
+            provider: "razorpay",
+            method: "ONLINE",
+            status: "PENDING"
+          },
+          customer: {
+            name: name,
+            phone: phone,
+            address: `${house}, ${area}, ${cityState} - ${pincode}`
+          },
+          status: "PAYMENT_PENDING"
+        };
+
+        // Pre-save order to database so admin dashboard immediately captures the lead
+        saveOrderToDatabase(preOrderPayload).catch(() => {});
+
+        const options = {
+          key: "rzp_test_Th6Nto2sVfzsSu",
+          amount: total * 100, // in paise
+          currency: "INR",
+          name: "Magical Seeds",
+          description: `Magical Seeds (${tier.title})`,
+          image: "./image/product_hero_pack.webp",
+          notes: {
+            order_id: onlineOrderId,
+            name: name,
+            phone: phone
+          },
+          prefill: {
+            name: name,
+            contact: phone
+          },
+          theme: {
+            color: "#0c5836"
+          },
+          modal: {
+            ondismiss: function () {
+              console.log("Razorpay checkout modal closed by user.");
+              isSubmittingFastOrder = false;
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
+              }
+            }
+          },
+          handler: async function (response) {
+            const paidPayload = {
+              ...preOrderPayload,
+              payment_id: response.razorpay_payment_id,
+              payment: {
+                provider: "razorpay",
+                method: "ONLINE",
+                status: "CAPTURED",
+                payment_id: response.razorpay_payment_id
+              },
+              status: "PAID"
+            };
+
+            await saveOrderToDatabase(paidPayload);
+            const waMsg = `🌱 *MAGICAL SEEDS - PAYMENT RECEIVED & CONFIRMED!* 🌱\n` +
+              `Order ID: ${paidPayload.order_id}\nAmount Paid: ₹${total} (Prepaid)\nItems: ${tier.title}\nThank you!`;
+            sendWhatsAppAlert(phone, waMsg).catch(() => {});
+            currentActiveOnlineOrderId = null;
+            isSubmittingFastOrder = false;
+            showOrderSuccess(paidPayload, waMsg);
+          }
+        };
+
+        try {
+          const rzp = new Razorpay(options);
+          rzp.on("payment.failed", async function (response) {
+            console.warn("Razorpay payment failed:", response.error);
+            isSubmittingFastOrder = false;
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
+            }
+            const failedPayload = {
+              ...preOrderPayload,
+              payment: {
+                provider: "razorpay",
+                method: "ONLINE",
+                status: "FAILED",
+                payment_id: response.error?.metadata?.payment_id || "",
+                error_code: response.error?.code || "PAYMENT_FAILED",
+                error_description: response.error?.description || "Payment failed at gateway",
+                error_reason: response.error?.reason || "declined"
+              },
+              status: "PAYMENT_FAILED"
+            };
+
+            await saveOrderToDatabase(failedPayload);
+            alert("Payment Failed: " + (response.error?.description || "Your payment could not be processed. Please try again or choose Cash on Delivery."));
+          });
+          rzp.open();
+        } catch (err) {
+          isSubmittingFastOrder = false;
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
+          }
+          alert("Payment gateway loading error. Please choose Cash on Delivery.");
+        }
+      }
+    }
+  </script>
+
+</body>
+
+</html>

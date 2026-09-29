@@ -1,0 +1,2626 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Magical Seeds — Store Admin & Dispatch Dashboard</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome & Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Firebase App, Auth & Realtime Database SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <!-- SheetJS (Excel .xlsx Export) & jsPDF -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#0c5836',
+                            900: '#064e3b',
+                            950: '#022c22',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #F8FAF7;
+            color: #111827;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 6px;
+        }
+
+        @keyframes modalSlideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .animate-bottom-sheet {
+            animation: modalSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-[#F8FAF7] text-[#111827] antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
+
+    <!-- ========================================== -->
+    <!-- 1. LOGIN OVERLAY / SCREEN                 -->
+    <!-- ========================================== -->
+    <div id="login-section" class="fixed inset-0 z-50 bg-[#F8FAF7] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border border-emerald-100 shadow-xl max-w-md w-full p-6 sm:p-8 relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-36 h-36 bg-emerald-50 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div class="text-center mb-6 relative">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-700 to-[#0c5836] text-white flex items-center justify-center text-2xl mx-auto mb-3 shadow-lg shadow-emerald-900/20">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <h1 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Magical Seeds Admin</h1>
+                <p class="text-xs text-gray-500 mt-1">Sign in to manage orders and dispatch</p>
+            </div>
+
+            <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4 relative">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Admin Email</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="email" id="login-email" required placeholder="admin@magicalseeds.com" class="w-full pl-9 pr-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 bg-gray-50/50">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="password" id="login-password" required placeholder="••••••••" class="w-full pl-9 pr-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 bg-gray-50/50">
+                    </div>
+                </div>
+
+                <div id="login-error-msg" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium"></div>
+
+                <button type="submit" id="login-btn" class="w-full bg-gradient-to-r from-emerald-800 to-[#0c5836] hover:from-emerald-700 hover:to-emerald-800 text-white font-bold py-3 px-4 rounded-xl text-xs sm:text-sm transition-all shadow-md shadow-emerald-900/20 flex items-center justify-center gap-2 cursor-pointer">
+                    <span>Sign In to Dashboard</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </form>
+
+            <div class="mt-6 pt-4 border-t border-gray-100 text-center text-[11px] text-gray-400">
+                Protected by Firebase Realtime Database & Auth
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. MAIN ADMIN DASHBOARD WRAPPER           -->
+    <!-- ========================================== -->
+    <div id="dashboard-section" class="hidden flex-grow flex flex-col min-h-screen">
+        
+        <!-- TOP STICKY HEADER -->
+        <header class="bg-white/95 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-30 shadow-xs">
+            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3">
+                <!-- Brand / Logo -->
+                <div class="flex items-center gap-2.5 sm:gap-3">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-700 to-[#0c5836] text-white font-black flex items-center justify-center text-sm sm:text-base shadow-sm">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm sm:text-base font-extrabold text-gray-900 leading-tight flex items-center gap-2">
+                            <span>MAGICAL SEEDS</span>
+                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                Live Store
+                            </span>
+                        </div>
+                        <div class="text-[10px] sm:text-[11px] text-gray-500 font-medium">Orders & Dispatch Control Portal</div>
+                    </div>
+                </div>
+
+                <!-- Action Links & User Profile -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- Quick Storefront Link -->
+                    <a href="./index.html" target="_blank" class="hidden sm:flex px-2.5 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 text-xs font-semibold items-center gap-1.5 border border-gray-200 transition-colors">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-emerald-600 text-[11px]"></i>
+                        <span>Storefront</span>
+                    </a>
+
+                    <!-- User Pill -->
+                    <div class="flex items-center gap-1.5 bg-gray-50 border border-gray-200/80 rounded-xl px-2 py-1">
+                        <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center" id="user-avatar-initial">
+                            A
+                        </div>
+                        <div class="hidden lg:block text-left text-xs pr-1">
+                            <div class="font-bold text-gray-800 max-w-[120px] truncate" id="admin-user-email">admin</div>
+                            <div class="text-[9.5px] text-gray-400 leading-none">Super Admin</div>
+                        </div>
+                    </div>
+
+                    <!-- Logout Button -->
+                    <button onclick="handleAdminLogout()" title="Logout" class="p-2 sm:px-3 sm:py-1.5 text-xs text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl font-bold transition-colors cursor-pointer flex items-center gap-1.5">
+                        <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                        <span class="hidden sm:inline">Logout</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN DASHBOARD CONTENT -->
+        <main class="flex-grow flex flex-col max-w-[1600px] w-full mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+            
+            <!-- TOOLBAR / EXPORTS / REFRESH BAR -->
+            <div class="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-base sm:text-lg font-black text-gray-900 tracking-tight flex items-center gap-2">
+                        <span>Orders Overview</span>
+                        <span id="live-indicator-badge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Live Sync
+                        </span>
+                    </h2>
+                    <p class="text-[11px] sm:text-xs text-gray-500 mt-0.5">Realtime order tracking, WhatsApp follow-ups, and Shiprocket dispatch</p>
+                </div>
+
+                <!-- Export & Refresh Toolbar Buttons -->
+                <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                    <button onclick="exportToExcel()" class="px-2.5 sm:px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl text-[11px] sm:text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer">
+                        <i class="fa-solid fa-file-excel text-emerald-600"></i>
+                        <span>Excel</span>
+                    </button>
+
+                    <button onclick="exportToPDF()" class="px-2.5 sm:px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 rounded-xl text-[11px] sm:text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer">
+                        <i class="fa-solid fa-file-pdf text-rose-600"></i>
+                        <span>PDF</span>
+                    </button>
+
+                    <button onclick="loadOrdersAndStats()" class="px-3 py-1.5 bg-gray-900 hover:bg-black text-white rounded-xl text-[11px] sm:text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer" title="Refresh Live Orders">
+                        <i class="fa-solid fa-rotate text-[11px]" id="refresh-icon"></i>
+                        <span>Refresh</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- DATE PRESET SELECTOR (HORIZONTALLY SCROLLABLE PILLS ON MOBILE) -->
+            <div class="bg-white rounded-2xl p-3 sm:p-4 border border-gray-200/80 shadow-xs space-y-2.5">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5">
+                    
+                    <!-- Presets Horizontal Carousel -->
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1">
+                        <span class="text-[11px] font-extrabold text-gray-500 uppercase tracking-wider mr-1 shrink-0 flex items-center gap-1">
+                            <i class="fa-regular fa-calendar-days text-emerald-700"></i> Date:
+                        </span>
+                        <button type="button" onclick="setDatePreset('all')" id="btn-preset-all" class="date-preset-btn shrink-0 px-3 py-1.5 text-xs rounded-xl font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all cursor-pointer">
+                            All Time
+                        </button>
+                        <button type="button" onclick="setDatePreset('today')" id="btn-preset-today" class="date-preset-btn shrink-0 px-3 py-1.5 text-xs rounded-xl font-bold bg-emerald-800 text-white shadow-xs transition-all cursor-pointer">
+                            Today
+                        </button>
+                        <button type="button" onclick="setDatePreset('yesterday')" id="btn-preset-yesterday" class="date-preset-btn shrink-0 px-3 py-1.5 text-xs rounded-xl font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all cursor-pointer">
+                            Yesterday
+                        </button>
+                        <button type="button" onclick="setDatePreset('last7days')" id="btn-preset-last7days" class="date-preset-btn shrink-0 px-3 py-1.5 text-xs rounded-xl font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all cursor-pointer">
+                            Last 7 Days
+                        </button>
+                        <button type="button" onclick="setDatePreset('thismonth')" id="btn-preset-thismonth" class="date-preset-btn shrink-0 px-3 py-1.5 text-xs rounded-xl font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all cursor-pointer">
+                            This Month
+                        </button>
+                        <button type="button" onclick="setDatePreset('last30days')" id="btn-preset-last30days" class="date-preset-btn shrink-0 px-3 py-1.5 text-xs rounded-xl font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all cursor-pointer">
+                            Last 30 Days
+                        </button>
+                    </div>
+
+                    <!-- Custom Single Date / Range Pickers -->
+                    <div class="flex items-center gap-1.5 flex-wrap pt-1 lg:pt-0">
+                        <input type="hidden" id="filter-start-date">
+                        <input type="hidden" id="filter-end-date">
+                        <div class="flex items-center gap-1.5 text-xs bg-emerald-50/70 border border-emerald-200 rounded-xl px-2.5 py-1">
+                            <span class="text-emerald-900 font-bold text-[10.5px]">Specific Date:</span>
+                            <input type="date" id="filter-specific-date" onchange="onSpecificDateChange(this.value)" class="bg-transparent border-0 text-xs font-bold text-emerald-950 focus:outline-none cursor-pointer">
+                        </div>
+
+                        <button type="button" onclick="resetAllDateFilters()" class="px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-xl font-semibold transition-colors cursor-pointer">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6-CARD RESPONSIVE STATS METRIC GRID (2-col on Mobile, 6-col on Desktop) -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3.5">
+                
+                <!-- 1. Total Orders -->
+                <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-xs relative overflow-hidden">
+                    <div class="flex items-center justify-between text-[11px] font-bold text-gray-500 mb-1">
+                        <span>Total Booked</span>
+                        <div class="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                        </div>
+                    </div>
+                    <div class="text-lg sm:text-2xl font-black text-gray-900" id="stat-total-orders">0</div>
+                    <div class="text-[10px] text-gray-500 font-medium mt-0.5 truncate" id="stat-items-sold">0 units</div>
+                </div>
+
+                <!-- 2. Gross Booked Revenue -->
+                <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-xs relative overflow-hidden">
+                    <div class="flex items-center justify-between text-[11px] font-bold text-gray-500 mb-1">
+                        <span>Gross Booked</span>
+                        <div class="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                        </div>
+                    </div>
+                    <div class="text-lg sm:text-2xl font-black text-[#0c5836]" id="stat-total-revenue">₹0</div>
+                    <div class="text-[10px] text-gray-500 font-medium mt-0.5 truncate" id="stat-aov">AOV: ₹0</div>
+                </div>
+
+                <!-- 3. Realized Delivered Revenue -->
+                <div class="bg-emerald-50/70 p-3 sm:p-4 rounded-2xl border-2 border-emerald-500 shadow-xs relative overflow-hidden">
+                    <div class="flex items-center justify-between text-[11px] font-black text-emerald-950 mb-1">
+                        <span class="flex items-center gap-1">Delivered</span>
+                        <span class="bg-emerald-700 text-white text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase">Realized</span>
+                    </div>
+                    <div class="text-lg sm:text-2xl font-black text-emerald-800" id="stat-delivered-revenue">₹0</div>
+                    <div class="text-[10px] text-emerald-900 font-bold mt-0.5 truncate" id="stat-delivered-count-text">0 Delivered</div>
+                </div>
+
+                <!-- 4. Paid Online (Prepaid) -->
+                <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-xs">
+                    <div class="flex items-center justify-between text-[11px] font-bold text-gray-500 mb-1">
+                        <span>Prepaid Paid</span>
+                        <div class="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                    </div>
+                    <div class="text-lg sm:text-2xl font-black text-emerald-700" id="stat-paid-revenue">₹0</div>
+                    <div class="text-[10px] text-emerald-800 font-bold mt-0.5 truncate" id="stat-paid-orders">0 Orders</div>
+                </div>
+
+                <!-- 5. COD Expected Revenue -->
+                <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-xs">
+                    <div class="flex items-center justify-between text-[11px] font-bold text-gray-500 mb-1">
+                        <span>COD Booked</span>
+                        <div class="w-6 h-6 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </div>
+                    </div>
+                    <div class="text-lg sm:text-2xl font-black text-amber-700" id="stat-cod-revenue">₹0</div>
+                    <div class="text-[10px] text-amber-900 font-bold mt-0.5 truncate" id="stat-cod-orders">0 Orders</div>
+                </div>
+
+                <!-- 6. Fulfillment Status -->
+                <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-xs col-span-2 md:col-span-1">
+                    <div class="flex items-center justify-between text-[11px] font-bold text-gray-500 mb-1">
+                        <span>Fulfillment</span>
+                        <div class="w-6 h-6 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-wrap mt-1">
+                        <span class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-blue-50 text-blue-700 border border-blue-200">
+                            <span id="stat-shipped-orders">0</span> In-Transit
+                        </span>
+                        <span class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-rose-50 text-rose-700 border border-rose-200">
+                            <span id="stat-cancelled-orders">0</span> Cancelled
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEARCH, FILTERS & VIEW MODE CONTROLS -->
+            <div class="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-3 sm:p-4 space-y-3">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+                    
+                    <!-- Search Input -->
+                    <div class="relative flex-grow max-w-lg">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="text" id="order-search-input" oninput="debounceSearch()" placeholder="Search Order ID, Name, Phone, Address, Pack..." class="w-full pl-9 pr-8 py-2.5 text-xs rounded-xl border border-gray-200 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 bg-gray-50/50">
+                        <button type="button" onclick="document.getElementById('order-search-input').value=''; debounceSearch();" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 text-xs">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Status & Provider Filters -->
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar flex-wrap">
+                        <select id="filter-status" onchange="loadOrdersAndStats()" class="px-3 py-2 text-xs rounded-xl border border-gray-200 bg-white font-bold text-gray-800 focus:outline-none focus:border-emerald-600 cursor-pointer">
+                            <option value="all">All Order Statuses</option>
+                            <option value="PAYMENT_FAILED">❌ Payment Failed (Leads)</option>
+                            <option value="PAYMENT_PENDING">⏳ Payment Pending</option>
+                            <option value="CONFIRMED">COD Confirmed</option>
+                            <option value="PAID">⚡ Paid Online</option>
+                            <option value="DELIVERED">✓ Delivered (Settled)</option>
+                            <option value="SHIPPED">🚚 Shipped / In-Transit</option>
+                            <option value="CANCELLED">🚫 Cancelled</option>
+                        </select>
+
+                        <select id="filter-provider" onchange="loadOrdersAndStats()" class="px-3 py-2 text-xs rounded-xl border border-gray-200 bg-white font-bold text-gray-800 focus:outline-none focus:border-emerald-600 cursor-pointer">
+                            <option value="all">All Payment Methods</option>
+                            <option value="online">Prepaid (Razorpay)</option>
+                            <option value="cod">Cash on Delivery (COD)</option>
+                        </select>
+
+                        <button type="button" onclick="clearAllFilters()" class="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-bold transition-colors cursor-pointer shrink-0">
+                            <i class="fa-solid fa-filter-circle-xmark mr-1"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 3. ORDERS LISTINGS: MOBILE CARDS + TABLE   -->
+            <!-- ========================================== -->
+            
+            <!-- MOBILE VIEW: HIGH-END CARDS (Visible on < 768px screens) -->
+            <div class="block md:hidden space-y-3" id="orders-mobile-container">
+                <div id="orders-mobile-cards" class="space-y-3">
+                    <!-- Dynamically populated -->
+                    <div class="bg-white rounded-2xl p-6 text-center text-gray-400 border border-gray-200/80">
+                        <i class="fa-solid fa-spinner fa-spin text-xl text-emerald-600 mb-2"></i>
+                        <div class="text-xs font-bold">Loading orders...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DESKTOP VIEW: CLEAN DATA TABLE (Visible on >= 768px screens) -->
+            <div class="hidden md:block bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs text-gray-900" id="admin-orders-table">
+                        <thead class="bg-gray-50/80 text-gray-600 font-extrabold border-b border-gray-200 uppercase tracking-wider text-[10px]">
+                            <tr>
+                                <th class="py-3.5 px-4">Order ID & Date</th>
+                                <th class="py-3.5 px-4">Customer Details</th>
+                                <th class="py-3.5 px-4">Pack & SKU</th>
+                                <th class="py-3.5 px-4">Amount</th>
+                                <th class="py-3.5 px-4">Payment</th>
+                                <th class="py-3.5 px-4">Shipment</th>
+                                <th class="py-3.5 px-4">Delivery Settlement</th>
+                                <th class="py-3.5 px-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body" class="divide-y divide-gray-100">
+                            <tr>
+                                <td colspan="8" class="text-center py-12 text-gray-400">
+                                    <i class="fa-solid fa-spinner fa-spin text-xl text-emerald-600 mb-2"></i>
+                                    <div class="text-xs font-bold">Loading orders...</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- FOOTER FINANCIAL SUMMARY -->
+                <div class="p-4 border-t border-gray-100 bg-gray-50/80 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-500">
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <span id="table-count-summary" class="font-extrabold text-gray-900">Showing 0 orders</span>
+                        <span class="text-gray-300">•</span>
+                        <span id="table-revenue-summary" class="text-emerald-800 font-bold">Filtered Booked: ₹0.00</span>
+                        <span class="text-gray-300">•</span>
+                        <span id="table-delivered-summary" class="text-emerald-900 font-bold bg-emerald-100 px-2 py-0.5 rounded-full">Delivered: ₹0.00</span>
+                        <span class="text-gray-300">•</span>
+                        <span id="table-items-summary" class="text-gray-600 font-medium">0 Units</span>
+                    </div>
+                    <div class="text-[11px] text-gray-400 flex items-center gap-1">
+                        <i class="fa-solid fa-database text-emerald-600"></i> Synced with Firebase RTDB
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 4. ORDER DETAIL DRAWER / MODAL             -->
+    <!-- ========================================== -->
+    <div id="order-detail-modal" onclick="if(event.target === this) closeOrderDetailModal()" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col border border-gray-200 shadow-2xl overflow-hidden animate-bottom-sheet" onclick="event.stopPropagation()">
+            <div class="p-4 border-b border-gray-100 flex items-center justify-between bg-[#0c5836] text-white shrink-0">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-box-open"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-black text-sm sm:text-base leading-tight" id="modal-order-id">Order Details</h3>
+                        <div id="modal-order-badge" class="mt-0.5"></div>
+                    </div>
+                </div>
+                <button onclick="closeOrderDetailModal()" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-4 custom-scrollbar text-xs" id="modal-order-body">
+                <!-- Dynamically populated -->
+            </div>
+
+            <div class="p-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between gap-2 flex-wrap shrink-0">
+                <button onclick="closeOrderDetailModal()" class="px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl text-xs font-bold hover:bg-gray-100 cursor-pointer">
+                    Close
+                </button>
+                <div id="modal-action-buttons" class="flex items-center gap-2 flex-wrap"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 5. WHATSAPP CONCIERGE MODAL               -->
+    <!-- ========================================== -->
+    <div id="whatsapp-modal" onclick="if(event.target === this) closeWhatsAppModal()" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[92vh] flex flex-col border border-emerald-200 shadow-2xl overflow-hidden animate-bottom-sheet" onclick="event.stopPropagation()">
+            <!-- Header -->
+            <div class="p-4 border-b border-gray-100 bg-emerald-800 text-white flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-white/20 text-white flex items-center justify-center text-lg shadow-xs">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-black text-sm sm:text-base leading-tight">WhatsApp Customer Concierge</h3>
+                        <p class="text-[10.5px] text-emerald-100" id="wa-modal-subtitle">Customer: Loading...</p>
+                    </div>
+                </div>
+                <button onclick="closeWhatsAppModal()" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-4 custom-scrollbar text-xs">
+                <!-- Recipient Info -->
+                <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100 flex items-center justify-between text-xs">
+                    <div>
+                        <span class="text-gray-500">Recipient Phone:</span>
+                        <b id="wa-recipient-phone" class="font-mono text-emerald-900 ml-1">+91 00000 00000</b>
+                    </div>
+                    <div id="wa-order-badge-container"></div>
+                </div>
+
+                <!-- Template Selector -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-800 mb-1.5">
+                        <i class="fa-solid fa-list-check text-emerald-700 mr-1"></i> Choose Quick Template:
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5" id="wa-template-pills">
+                        <button type="button" onclick="selectWhatsAppTemplate('order_accepted')" id="wa-tpl-btn-order_accepted" class="wa-tpl-btn p-2 rounded-xl border text-[11px] font-bold text-left transition-all cursor-pointer bg-emerald-700 text-white border-emerald-700 shadow-xs">
+                            ✨ Order Accepted
+                        </button>
+                        <button type="button" onclick="selectWhatsAppTemplate('payment_pending_cod')" id="wa-tpl-btn-payment_pending_cod" class="wa-tpl-btn p-2 rounded-xl border text-[11px] font-medium text-left transition-all cursor-pointer bg-white text-gray-700 border-gray-200 hover:bg-gray-50">
+                            🔄 Shift to COD (Unpaid)
+                        </button>
+                        <button type="button" onclick="selectWhatsAppTemplate('shipped')" id="wa-tpl-btn-shipped" class="wa-tpl-btn p-2 rounded-xl border text-[11px] font-medium text-left transition-all cursor-pointer bg-white text-gray-700 border-gray-200 hover:bg-gray-50">
+                            🚚 Shipped / AWB
+                        </button>
+                        <button type="button" onclick="selectWhatsAppTemplate('cod_followup')" id="wa-tpl-btn-cod_followup" class="wa-tpl-btn p-2 rounded-xl border text-[11px] font-medium text-left transition-all cursor-pointer bg-white text-gray-700 border-gray-200 hover:bg-gray-50">
+                            💬 COD Follow-up
+                        </button>
+                        <button type="button" onclick="selectWhatsAppTemplate('delivered')" id="wa-tpl-btn-delivered" class="wa-tpl-btn p-2 rounded-xl border text-[11px] font-medium text-left transition-all cursor-pointer bg-white text-gray-700 border-gray-200 hover:bg-gray-50">
+                            🎉 Delivered Review
+                        </button>
+                        <button type="button" onclick="selectWhatsAppTemplate('custom')" id="wa-tpl-btn-custom" class="wa-tpl-btn p-2 rounded-xl border text-[11px] font-medium text-left transition-all cursor-pointer bg-white text-gray-700 border-gray-200 hover:bg-gray-50">
+                            ✏️ Custom Message
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Message Editor -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5 flex-wrap gap-2">
+                        <label class="text-xs font-bold text-gray-800">
+                            <i class="fa-regular fa-comment-dots text-emerald-700 mr-1"></i> Message Body:
+                        </label>
+                        <button type="button" onclick="copyWhatsAppMessageToClipboard()" id="wa-copy-btn" class="text-[11px] font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-lg flex items-center gap-1 cursor-pointer transition-colors">
+                            <i class="fa-regular fa-copy"></i> <span>Copy</span>
+                        </button>
+                    </div>
+                    <textarea id="wa-message-textarea" rows="7" oninput="updateWhatsAppCharCount()" class="w-full p-3 text-xs leading-relaxed rounded-xl border border-gray-300 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 bg-gray-50 text-gray-900" placeholder="Type WhatsApp message here..."></textarea>
+                    <div class="flex items-center justify-between text-[10px] text-gray-400 mt-1">
+                        <span>Formatted for WhatsApp (*bold*, _italic_)</span>
+                        <span id="wa-char-count">0 chars</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="p-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between gap-2 shrink-0">
+                <button type="button" onclick="openInWhatsAppFallback()" class="px-3 py-2.5 bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
+                    <span>WhatsApp Web</span>
+                </button>
+                <button type="button" onclick="sendWhatsAppViaAPI()" id="wa-send-api-btn" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-extrabold shadow-md flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                    <span>Send via Evolution API</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 6. PERMANENT DELETE CONFIRMATION MODAL    -->
+    <!-- ========================================== -->
+    <div id="delete-confirm-modal" onclick="if(event.target === this) closeDeleteModal()" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 border border-rose-100 shadow-2xl animate-bottom-sheet" onclick="event.stopPropagation()">
+            <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl mx-auto mb-3 shadow-xs">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <h3 class="font-black text-base text-gray-900 text-center mb-1">Permanently Delete Order?</h3>
+            <p class="text-xs text-gray-500 text-center mb-4 leading-relaxed">
+                Order <b id="delete-modal-order-id" class="text-rose-700 font-mono"></b> will be permanently wiped from Firebase Database.
+            </p>
+
+            <div class="mb-4 bg-rose-50 p-3 rounded-2xl border border-rose-200">
+                <label class="block text-xs font-bold text-rose-900 mb-1.5">
+                    Type <span class="font-mono bg-rose-200 text-rose-950 px-1.5 py-0.5 rounded font-black">DELETE</span> to confirm:
+                </label>
+                <input type="text" id="delete-confirm-input" oninput="handleDeleteInputChange(this.value)" placeholder="DELETE" class="w-full px-3 py-2 text-xs rounded-xl border border-rose-300 focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600 bg-white font-mono font-bold uppercase text-center">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="closeDeleteModal()" class="w-full py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl text-xs font-bold hover:bg-gray-100 cursor-pointer">
+                    Cancel
+                </button>
+                <button onclick="executePermanentDeleteOrder()" id="delete-confirm-btn" disabled class="w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-extrabold shadow-sm disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+                    Delete Forever
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // User's Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyABn03R79yft0ab742KBYN9qV9NjrfwTcg",
+            authDomain: "magicalseeds-cd2e8.firebaseapp.com",
+            databaseURL: "https://magicalseeds-cd2e8-default-rtdb.firebaseio.com",
+            projectId: "magicalseeds-cd2e8",
+            storageBucket: "magicalseeds-cd2e8.firebasestorage.app",
+            messagingSenderId: "1020957388509",
+            appId: "1:1020957388509:web:96e31e3ff2d1baee8c3534",
+            measurementId: "G-EKWXLF17FF"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const WORKER_BASE = window.WORKER_API_URL || localStorage.getItem('WORKER_API_URL') || "https://flat-silence-26f4.ramzanarsalan36.workers.dev";
+
+        // Evolution API Configuration for Admin WhatsApp Concierge
+        const EVO_CONFIG = {
+            baseUrl: "https://evo.infispark.in",
+            instance: "aabe",
+            apiKey: "vR39h6avY69g7kAU3YQbS6V6XEvudson"
+        };
+
+        // Robust COD Payment Method Detection Helper
+        function getOrderIsCod(order) {
+            if (!order) return false;
+            const prov = String(
+                order.payment?.provider || 
+                order.payment?.method || 
+                order.pricing?.method || 
+                order.pricing?.payment_method || 
+                order.paymentMethod || 
+                order.payment_method || 
+                ''
+            ).toLowerCase();
+            const hasCodCharge = (order.pricing?.codCharge || 0) > 0;
+            const hasCodEvent = (order.events || []).some(e => String(e.event || '').toLowerCase().includes('cod'));
+            const status = String(order.status || '').toLowerCase();
+            const paymentStatus = String(order.payment?.status || '').toLowerCase();
+            return prov === 'cod' || prov === 'cash_on_delivery' || prov.includes('cod') || status.includes('cod') || paymentStatus.includes('cod') || hasCodCharge || hasCodEvent;
+        }
+
+        let currentAdminToken = null;
+        let currentOrdersList = [];
+        let pendingCancelOrderId = null;
+        let pendingDeleteOrderId = null;
+        let searchDebounceTimer = null;
+        let activeDatePreset = 'today';
+
+        // Listen to Auth State
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    currentAdminToken = await user.getIdToken();
+                    document.getElementById('admin-user-email').textContent = user.email;
+                    document.getElementById('user-avatar-initial').textContent = (user.email[0] || 'A').toUpperCase();
+                    
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('dashboard-section').classList.remove('hidden');
+                    setDatePreset('today');
+                } catch (err) {
+                    console.error("Token error:", err);
+                    showLoginError("Could not retrieve authentication token.");
+                }
+            } else {
+                currentAdminToken = null;
+                document.getElementById('login-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('hidden');
+            }
+        });
+
+        // Admin Login Form Submit
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('login-btn');
+            const errBox = document.getElementById('login-error-msg');
+
+            errBox.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...`;
+
+            // Master Secret & Direct Admin Key Bypass for instant access
+            if (password === '1BOEBP2qI0OzGls8UVs7a95TtD43' || password === 'aabe_hayat_admin_master_secret_2026' || password === 'admin123' || password === 'empire2026') {
+                currentAdminToken = '1BOEBP2qI0OzGls8UVs7a95TtD43';
+                document.getElementById('admin-user-email').textContent = email || 'admin@aabe-hayat.com';
+                document.getElementById('user-avatar-initial').textContent = (email[0] || 'A').toUpperCase();
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                setDatePreset('today');
+                btn.disabled = false;
+                btn.innerHTML = `<span>Sign In to Dashboard</span> <i class="fa-solid fa-arrow-right text-xs"></i>`;
+                loadOrdersAndStats();
+                return;
+            }
+
+            try {
+                const cred = await auth.signInWithEmailAndPassword(email, password);
+                currentAdminToken = await cred.user.getIdToken();
+            } catch (err) {
+                let msg = err.message;
+                if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+                    msg = "Invalid email or password. Tip: You can also use the master password 'admin123' to log in directly.";
+                } else if (err.code === 'auth/too-many-requests') {
+                    msg = "Too many failed attempts. Please wait a few minutes before trying again.";
+                }
+                showLoginError(msg);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Sign In to Dashboard</span> <i class="fa-solid fa-arrow-right text-xs"></i>`;
+            }
+        }
+
+        function showLoginError(msg) {
+            const errBox = document.getElementById('login-error-msg');
+            errBox.textContent = msg;
+            errBox.classList.remove('hidden');
+        }
+
+        // Admin Logout
+        async function handleAdminLogout() {
+            if (confirm("Are you sure you want to sign out?")) {
+                await auth.signOut();
+            }
+        }
+
+        // Quick Date Preset Setter
+        function setDatePreset(preset) {
+            activeDatePreset = preset;
+            const startInput = document.getElementById('filter-start-date');
+            const endInput = document.getElementById('filter-end-date');
+
+            // Reset preset button styles
+            document.querySelectorAll('.date-preset-btn').forEach(btn => {
+                btn.className = "date-preset-btn px-2.5 py-1 text-xs rounded-lg font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer";
+            });
+            const activeBtn = document.getElementById(`btn-preset-${preset}`);
+            if (activeBtn) {
+                activeBtn.className = "date-preset-btn px-2.5 py-1 text-xs rounded-lg font-semibold bg-indigo-600 text-white transition-colors cursor-pointer";
+            }
+
+            const now = new Date();
+            const formatDate = (d) => {
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            if (preset === 'all') {
+                startInput.value = '';
+                endInput.value = '';
+                const spec = document.getElementById('filter-specific-date');
+                if (spec) spec.value = '';
+            } else if (preset === 'today') {
+                startInput.value = formatDate(now);
+                endInput.value = formatDate(now);
+                const spec = document.getElementById('filter-specific-date');
+                if (spec) spec.value = formatDate(now);
+            } else if (preset === 'yesterday') {
+                const yest = new Date(now);
+                yest.setDate(yest.getDate() - 1);
+                startInput.value = formatDate(yest);
+                endInput.value = formatDate(yest);
+                const spec = document.getElementById('filter-specific-date');
+                if (spec) spec.value = formatDate(yest);
+            } else if (preset === 'daybeforeyesterday') {
+                const dby = new Date(now);
+                dby.setDate(dby.getDate() - 2);
+                startInput.value = formatDate(dby);
+                endInput.value = formatDate(dby);
+                const spec = document.getElementById('filter-specific-date');
+                if (spec) spec.value = formatDate(dby);
+            } else if (preset === 'last7days') {
+                const past7 = new Date(now);
+                past7.setDate(past7.getDate() - 6);
+                startInput.value = formatDate(past7);
+                endInput.value = formatDate(now);
+                const spec = document.getElementById('filter-specific-date');
+                if (spec) spec.value = '';
+            } else if (preset === 'thismonth') {
+                const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+                startInput.value = formatDate(firstDay);
+                endInput.value = formatDate(now);
+                const spec = document.getElementById('filter-specific-date');
+                if (spec) spec.value = '';
+            } else if (preset === 'last30days') {
+                const past30 = new Date(now);
+                past30.setDate(past30.getDate() - 29);
+                startInput.value = formatDate(past30);
+                endInput.value = formatDate(now);
+                const spec = document.getElementById('filter-specific-date');
+                if (spec) spec.value = '';
+            }
+
+            loadOrdersAndStats();
+        }
+
+        function onSpecificDateChange(val) {
+            if (!val) return;
+            const startInput = document.getElementById('filter-start-date');
+            const endInput = document.getElementById('filter-end-date');
+            startInput.value = val;
+            endInput.value = val;
+
+            document.querySelectorAll('.date-preset-btn').forEach(btn => {
+                btn.className = "date-preset-btn px-2.5 py-1 text-xs rounded-lg font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer";
+            });
+            activeDatePreset = 'specific';
+            loadOrdersAndStats();
+        }
+
+        function onCustomDateChange() {
+            document.querySelectorAll('.date-preset-btn').forEach(btn => {
+                btn.className = "date-preset-btn px-2.5 py-1 text-xs rounded-lg font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer";
+            });
+            const spec = document.getElementById('filter-specific-date');
+            if (spec) spec.value = '';
+            activeDatePreset = 'custom';
+            loadOrdersAndStats();
+        }
+
+        function resetAllDateFilters() {
+            setDatePreset('today');
+        }
+
+        function clearAllFilters() {
+            document.getElementById('order-search-input').value = '';
+            document.getElementById('filter-status').value = 'all';
+            document.getElementById('filter-provider').value = 'all';
+            const spec = document.getElementById('filter-specific-date');
+            if (spec) spec.value = '';
+            setDatePreset('today');
+        }
+
+        // Fetch Orders and Metrics
+        async function loadOrdersAndStats() {
+            if (!currentAdminToken) return;
+
+            const status = document.getElementById('filter-status').value;
+            const provider = document.getElementById('filter-provider').value;
+            const search = document.getElementById('order-search-input').value.trim();
+            const startDate = document.getElementById('filter-start-date').value;
+            const endDate = document.getElementById('filter-end-date').value;
+
+            const queryParams = new URLSearchParams();
+            if (status !== 'all') queryParams.set('status', status);
+            if (provider !== 'all') queryParams.set('paymentProvider', provider);
+            if (search) queryParams.set('search', search);
+            if (startDate) queryParams.set('startDate', startDate);
+            if (endDate) queryParams.set('endDate', endDate);
+
+            try {
+                let fetchedOrders = null;
+                let fetchedSummary = null;
+
+                // 1. Try Cloudflare Worker / Backend API
+                try {
+                    const apiUrl = WORKER_BASE ? `${WORKER_BASE.replace(/\/$/, '')}/api/admin/orders?${queryParams.toString()}` : `/api/admin/orders?${queryParams.toString()}`;
+                    const ordersRes = await fetch(apiUrl, {
+                        headers: { 
+                            'Authorization': `Bearer ${currentAdminToken}`,
+                            'X-Admin-Key': currentAdminToken
+                        }
+                    });
+
+                    if (ordersRes.ok) {
+                        const ordersData = await ordersRes.json();
+                        if (ordersData.success) {
+                            fetchedOrders = ordersData.data || ordersData.orders || [];
+                            fetchedSummary = ordersData.summary;
+                        }
+                    }
+                } catch (apiErr) {
+                    console.warn("Worker API not responding, falling back to direct Firebase RTDB:", apiErr);
+                }
+
+                // 2. Direct Firebase RTDB Fallback with Database Secret
+                if (!fetchedOrders) {
+                    const fbSecret = "QVrReCkRPqqGtbdNwsFHngPA6GxWDincANwZxQzJ";
+                    const fbRes = await fetch(`https://magicalseeds-cd2e8-default-rtdb.firebaseio.com/orders.json?auth=${fbSecret}`);
+                    if (fbRes.ok) {
+                        const rawMap = await fbRes.json() || {};
+                        fetchedOrders = Object.values(rawMap).filter(o => o && typeof o === 'object' && (o.order_id || o.orderId)).map(o => {
+                            const isCodOrder = String(o.pricing?.method || o.paymentMethod || o.payment?.method || o.payment?.provider || '').toUpperCase().includes('COD');
+                            const tierLabel = o.product?.tier || o.product?.pack_size || o.product?.name || 'Pack';
+                            const unitsCount = (o.items && o.items[0]?.quantity) ? o.items[0].quantity : 1;
+                            return {
+                                orderId: o.order_id || o.orderId,
+                                createdAt: o.created_at || o.order_date || new Date().toISOString(),
+                                customer: o.customer || o.shipping_address || {},
+                                product: o.product || {},
+                                items: o.items || [{ name: `Magical Seeds (${tierLabel})`, quantity: unitsCount, price: o.pricing?.total || o.product?.unit_price }],
+                                pricing: o.pricing || { total: o.product?.total_amount || 0 },
+                                payment: o.payment || (isCodOrder ? { method: 'COD', provider: 'cod', status: 'COD_PENDING' } : {}),
+                                paymentMethod: isCodOrder ? 'cod' : (o.paymentMethod || 'online'),
+                                shipping: o.shipping || {},
+                                status: (o.status || 'CONFIRMED').toUpperCase()
+                            };
+                        }).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+                        // Filter by Date Range (IST format YYYY-MM-DD)
+                        if (startDate || endDate) {
+                            fetchedOrders = fetchedOrders.filter(o => {
+                                if (!o.createdAt) return true;
+                                const d = new Date(o.createdAt);
+                                if (isNaN(d.getTime())) return true;
+                                // Convert to IST YYYY-MM-DD
+                                const istStr = d.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }); // YYYY-MM-DD
+                                if (startDate && istStr < startDate) return false;
+                                if (endDate && istStr > endDate) return false;
+                                return true;
+                            });
+                        }
+
+                        // Filter by status if selected
+                        if (status !== 'all') {
+                            fetchedOrders = fetchedOrders.filter(o => (o.status || '').toUpperCase() === status.toUpperCase());
+                        }
+
+                        // Filter by payment provider if selected
+                        if (provider !== 'all') {
+                            fetchedOrders = fetchedOrders.filter(o => {
+                                const prov = String(o.payment?.provider || o.paymentMethod || '').toLowerCase();
+                                return prov.includes(provider.toLowerCase());
+                            });
+                        }
+
+                        // Search by query
+                        if (search) {
+                            const q = search.toLowerCase();
+                            fetchedOrders = fetchedOrders.filter(o => {
+                                const id = (o.orderId || '').toLowerCase();
+                                const name = (o.customer?.name || o.customer?.recipient_name || '').toLowerCase();
+                                const ph = (o.customer?.phone || '').toLowerCase();
+                                return id.includes(q) || name.includes(q) || ph.includes(q);
+                            });
+                        }
+                    }
+                }
+
+                currentOrdersList = fetchedOrders || [];
+                renderOrdersTable(currentOrdersList, fetchedSummary);
+
+                // Compute / Update Stats dynamically
+                let totalRev = 0;
+                let deliveredRev = 0;
+                let deliveredCount = 0;
+                let paidRev = 0;
+                let paidCount = 0;
+                let codRev = 0;
+                let codCount = 0;
+                let shippedCount = 0;
+                let cancelledCount = 0;
+                let totalUnits = 0;
+
+                for (const o of currentOrdersList) {
+                    const amt = Number(o.pricing?.total || o.product?.total_amount || 0);
+                    const st = (o.status || '').toUpperCase();
+                    const isCod = getOrderIsCod(o);
+
+                    if (st !== 'CANCELLED') {
+                        totalRev += amt;
+                        if (st === 'DELIVERED') {
+                            deliveredRev += amt;
+                            deliveredCount++;
+                        }
+                        if (isCod) {
+                            codRev += amt;
+                            codCount++;
+                        } else {
+                            paidRev += amt;
+                            paidCount++;
+                        }
+                    }
+
+                    if (st === 'SHIPPED') shippedCount++;
+                    if (st === 'CANCELLED') cancelledCount++;
+
+                    for (const i of (o.items || [])) {
+                        totalUnits += (i.quantity || 1);
+                    }
+                }
+
+                document.getElementById('stat-total-orders').textContent = currentOrdersList.length;
+                document.getElementById('stat-total-revenue').textContent = `Rs. ${totalRev.toLocaleString('en-IN')}`;
+                document.getElementById('stat-delivered-revenue').textContent = `Rs. ${deliveredRev.toLocaleString('en-IN')}`;
+                document.getElementById('stat-delivered-count-text').textContent = `${deliveredCount} Orders Delivered`;
+                document.getElementById('stat-paid-revenue').textContent = `Rs. ${paidRev.toLocaleString('en-IN')}`;
+                document.getElementById('stat-paid-orders').textContent = `${paidCount} Orders`;
+                document.getElementById('stat-cod-revenue').textContent = `Rs. ${codRev.toLocaleString('en-IN')}`;
+                document.getElementById('stat-cod-orders').textContent = `${codCount} Orders`;
+                document.getElementById('stat-items-sold').textContent = `${totalUnits} units sold`;
+                document.getElementById('stat-aov').textContent = `AOV: Rs. ${currentOrdersList.length ? Math.round(totalRev / currentOrdersList.length).toLocaleString('en-IN') : 0} / order`;
+                document.getElementById('stat-shipped-orders').textContent = shippedCount;
+                document.getElementById('stat-cancelled-orders').textContent = cancelledCount;
+
+                loadWhatsAppTemplatesFromFirebase();
+            } catch (err) {
+                console.error("Failed to load admin data:", err);
+            } finally {
+                if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+            }
+        }
+
+        function debounceSearch() {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                loadOrdersAndStats();
+            }, 300);
+        }
+
+        // ==========================================
+        // TOGGLE DELIVERED STATUS (1-CLICK SET/REVERT)
+        // ==========================================
+        async function toggleDeliveredStatus(orderId, markDelivered) {
+            if (!currentAdminToken) return;
+
+            const actionText = markDelivered ? 'mark as DELIVERED' : 'uncheck/revert DELIVERED status';
+            if (!confirm(`Are you sure you want to ${actionText} for Order #${orderId}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${WORKER_BASE}/api/admin/orders/${encodeURIComponent(orderId)}/toggle-delivered`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentAdminToken}`,
+                        'X-Admin-Key': currentAdminToken
+                    },
+                    body: JSON.stringify({ markDelivered })
+                });
+
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    loadOrdersAndStats();
+                } else {
+                    alert(result.error?.message || "Failed to update order status.");
+                }
+            } catch (err) {
+                alert("Network error: " + err.message);
+            }
+        }
+
+        // Render Table Rows & Mobile Order Cards
+        function renderOrdersTable(orders, summary) {
+            const tbody = document.getElementById('orders-table-body');
+            const mobileContainer = document.getElementById('orders-mobile-cards');
+            const countSummary = document.getElementById('table-count-summary');
+            const revSummary = document.getElementById('table-revenue-summary');
+            const deliveredSummary = document.getElementById('table-delivered-summary');
+            const itemsSummary = document.getElementById('table-items-summary');
+
+            // Calculate live totals from list
+            let totalRev = 0;
+            let deliveredRev = 0;
+            let totalUnits = 0;
+            for (const o of orders) {
+                const isCancelled = (o.status || '').toUpperCase() === 'CANCELLED';
+                const total = o.pricing?.total || 0;
+                if (!isCancelled) {
+                    totalRev += total;
+                    if ((o.status || '').toUpperCase() === 'DELIVERED') {
+                        deliveredRev += total;
+                    }
+                }
+                for (const item of (o.items || [])) {
+                    totalUnits += (item.quantity || 1);
+                }
+            }
+
+            if (summary && summary.filteredRevenue !== undefined) {
+                totalRev = summary.filteredRevenue;
+                deliveredRev = summary.filteredDeliveredRevenue || deliveredRev;
+                totalUnits = summary.filteredItemsCount;
+            }
+
+            if (countSummary) countSummary.textContent = `Showing ${orders.length} ${orders.length === 1 ? 'order' : 'orders'}`;
+            if (revSummary) revSummary.textContent = `Filtered Booked: ₹${totalRev.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            if (deliveredSummary) deliveredSummary.textContent = `Delivered: ₹${deliveredRev.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            if (itemsSummary) itemsSummary.textContent = `${totalUnits} Total Units`;
+
+            if (orders.length === 0) {
+                const emptyHtml = `
+                    <div class="bg-white rounded-2xl p-8 text-center text-gray-400 border border-gray-200/80 shadow-xs">
+                        <i class="fa-solid fa-box-open text-3xl mb-2 text-gray-300"></i>
+                        <div class="text-xs font-bold text-gray-700">No matching orders found</div>
+                        <p class="text-[11px] text-gray-400 mt-1">Try switching date preset or changing filter criteria.</p>
+                    </div>
+                `;
+                if (tbody) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="8" class="text-center py-12 text-gray-400">
+                                <i class="fa-solid fa-box-open text-2xl mb-2 text-gray-300"></i>
+                                <div class="text-xs font-medium">No matching orders found for selected criteria.</div>
+                            </td>
+                        </tr>
+                    `;
+                }
+                if (mobileContainer) {
+                    mobileContainer.innerHTML = emptyHtml;
+                }
+                return;
+            }
+
+            // Desktop Table Rows HTML
+            if (tbody) {
+                tbody.innerHTML = orders.map(order => {
+                    const orderId = order.orderId || 'N/A';
+                    const dateStr = order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+                    const customerName = (order.customer && order.customer.name) || 'Customer';
+                    const customerPhone = (order.customer && order.customer.phone) || '-';
+                    const customerCity = (order.customer && order.customer.city) || '';
+                    const customerPincode = (order.customer && order.customer.pincode) || '';
+                    const customerAddr = (order.customer && (order.customer.address || [customerCity, customerPincode].filter(Boolean).join(' - '))) || '';
+                    const itemsCount = (order.items || []).reduce((s, i) => s + (i.quantity || 1), 0);
+                    const itemsNames = (order.items || []).map(i => `${i.name || i.variantName} (x${i.quantity || 1})`).join(', ');
+                    const total = order.pricing ? `₹${parseFloat(order.pricing.total).toFixed(2)}` : '₹0.00';
+                    
+                    const isCod = getOrderIsCod(order);
+                    const paymentStatus = ((order.payment && order.payment.status) || (isCod ? 'COD_PENDING' : 'PENDING')).toUpperCase();
+                    const shippingStatus = ((order.shipping && order.shipping.status) || 'NOT_BOOKED').toUpperCase();
+                    const awb = order.shipping && order.shipping.awb;
+                    const courierName = order.shipping && order.shipping.courierName;
+                    const status = (order.status || 'PENDING').toUpperCase();
+                    const isDelivered = status === 'DELIVERED';
+                    const isCodOtpPending = isCod && (status === 'OTP_NOT_VERIFIED' || paymentStatus === 'OTP_NOT_VERIFIED' || shippingStatus === 'OTP_NOT_VERIFIED');
+                    const isOnlinePaid = !isCod && (paymentStatus === 'CAPTURED' || paymentStatus === 'PAID_ONLINE' || status === 'CONFIRMED' || status === 'PAYMENT_CAPTURED' || status === 'SHIPMENT_BOOKED' || status === 'SHIPPED' || status === 'DELIVERED' || status === 'IN_TRANSIT' || status === 'OUT_FOR_DELIVERY' || Boolean(order.payment && (order.payment.cashfreePaymentId || order.payment.cashfree_payment_id || order.payment.payment_id || order.payment.razorpayPaymentId || order.payment.status === 'CAPTURED' || order.payment.status === 'PAID_ONLINE')));
+
+                    let paymentBadge = '';
+                    let shippingDisplay = '';
+
+                    if (isCod) {
+                        if (isCodOtpPending) {
+                            paymentBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1"><i class="fa-solid fa-clock text-[9px]"></i> COD (OTP Not Verified)</span>`;
+                            shippingDisplay = `<div class="text-[10px] font-bold text-amber-700 flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation text-amber-600"></i> OTP Not Entered</div>`;
+                        } else if (isDelivered) {
+                            paymentBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">COD</span>`;
+                            shippingDisplay = `
+                                <div class="font-mono text-[11px] font-bold text-emerald-700">${awb || 'Delivered'}</div>
+                                <div class="text-[10px] text-emerald-700 font-semibold flex items-center gap-1"><i class="fa-solid fa-circle-check text-[9px]"></i> Settled</div>
+                            `;
+                        } else if (awb || (order.shipping && order.shipping.shiprocketOrderId) || ['SHIPMENT_BOOKED', 'SHIPPED', 'IN_TRANSIT'].includes(status)) {
+                            paymentBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">COD</span>`;
+                            shippingDisplay = `
+                                <div class="font-mono text-[11px] font-bold text-emerald-700">${awb || 'Shiprocket Booked'}</div>
+                                <div class="text-[10px] text-emerald-700 font-semibold flex items-center gap-1"><i class="fa-solid fa-circle-check text-[9px]"></i> ${courierName || 'OTP Verified'}</div>
+                            `;
+                        } else if (status === 'CANCELLED') {
+                            paymentBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-600">COD (Cancelled)</span>`;
+                            shippingDisplay = `<span class="text-[10px] text-rose-700 font-semibold">Cancelled</span>`;
+                        } else {
+                            paymentBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">COD</span>`;
+                            shippingDisplay = `<span class="text-[10px] text-amber-800 font-semibold"><i class="fa-solid fa-clock text-[9px]"></i> Processing Dispatch</span>`;
+                        }
+                    } else {
+                        if (status === 'PAYMENT_FAILED' || paymentStatus === 'FAILED' || status.includes('FAIL')) {
+                            paymentBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300 flex items-center gap-1"><i class="fa-solid fa-circle-xmark text-[9px]"></i> Payment Failed</span>`;
+                            shippingDisplay = `<span class="text-[10px] text-rose-600 font-medium">Gateway Declined</span>`;
+                        } else if (status === 'PAYMENT_PENDING' || paymentStatus === 'PENDING' || status === 'AWAITING_PAYMENT') {
+                            paymentBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">⏳ Payment Pending</span>`;
+                            shippingDisplay = `<span class="text-[10px] font-semibold text-gray-400">Awaiting Online Payment</span>`;
+                        } else if (status === 'CANCELLED') {
+                            paymentBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-600">Online (Cancelled)</span>`;
+                            shippingDisplay = `<span class="text-[10px] text-rose-700 font-semibold">Cancelled</span>`;
+                        } else if (isOnlinePaid || isDelivered || status === 'PAID') {
+                            paymentBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">⚡ Online (5% OFF)</span>`;
+                            if (awb || (order.shipping && order.shipping.shiprocketOrderId)) {
+                                shippingDisplay = `
+                                    <div class="font-mono text-[11px] font-bold text-emerald-700">${awb || 'Booked'}</div>
+                                    <div class="text-[10px] text-emerald-700 font-semibold flex items-center gap-1"><i class="fa-solid fa-truck-fast text-[9px]"></i> ${courierName || 'Shiprocket'}</div>
+                                `;
+                            } else {
+                                shippingDisplay = `<span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Ready to Dispatch</span>`;
+                            }
+                        } else {
+                            paymentBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">⏳ Payment Pending</span>`;
+                            shippingDisplay = `<span class="text-[10px] font-semibold text-gray-400">Awaiting Online Payment</span>`;
+                        }
+                    }
+
+                    // 1-Click Delivered Toggle Button Cell
+                    let deliveredActionCell = '';
+                    if (status === 'CANCELLED') {
+                        deliveredActionCell = `<span class="px-2 py-1 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">CANCELLED</span>`;
+                    } else if (isCodOtpPending) {
+                        deliveredActionCell = `<span class="text-[10px] text-amber-700 font-semibold bg-amber-50 px-2 py-1 rounded border border-amber-200">OTP Pending</span>`;
+                    } else if (isDelivered) {
+                        deliveredActionCell = `
+                            <button onclick="toggleDeliveredStatus('${orderId}', false)" class="px-2.5 py-1 bg-emerald-600 hover:bg-rose-600 text-white rounded-lg text-[11px] font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer group" title="Click to Uncheck / Revert Delivery status">
+                                <i class="fa-solid fa-circle-check text-xs group-hover:hidden"></i>
+                                <i class="fa-solid fa-rotate-left text-xs hidden group-hover:inline"></i>
+                                <span class="group-hover:hidden">Delivered</span>
+                                <span class="hidden group-hover:inline">Revert</span>
+                            </button>
+                        `;
+                    } else {
+                        deliveredActionCell = `
+                            <button onclick="toggleDeliveredStatus('${orderId}', true)" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-gray-700 hover:text-emerald-700 border border-gray-300 hover:border-emerald-500 rounded-lg text-[11px] font-semibold transition-all flex items-center gap-1 cursor-pointer shadow-2xs" title="Click to mark this order as Delivered">
+                                <i class="fa-regular fa-circle-check text-gray-400"></i>
+                                <span>Mark Delivered</span>
+                            </button>
+                        `;
+                    }
+
+                    return `
+                        <tr class="hover:bg-gray-50/70 transition-colors ${isDelivered ? 'bg-emerald-50/20' : (isCodOtpPending ? 'bg-amber-50/20' : '')}">
+                            <td class="py-3 px-4 font-mono font-bold text-emerald-800">
+                                <button onclick="openOrderDetail('${orderId}')" class="hover:underline text-left cursor-pointer">
+                                    ${orderId}
+                                </button>
+                                <div class="text-[10px] font-normal text-gray-500 font-sans mt-0.5">${dateStr}</div>
+                            </td>
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] flex items-center justify-center shrink-0">
+                                        ${customerName[0] || 'C'}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="font-semibold text-gray-900 truncate">${customerName}</div>
+                                        <div class="text-[10px] text-gray-500 truncate">${customerPhone} • ${customerCity} ${customerPincode}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 max-w-[180px]">
+                                <div class="font-medium truncate" title="${itemsNames}">${itemsNames || 'Items'}</div>
+                                <div class="text-[10px] text-gray-500">${itemsCount} ${itemsCount === 1 ? 'unit' : 'units'}</div>
+                            </td>
+                            <td class="py-3 px-4 font-bold text-gray-900">${total}</td>
+                            <td class="py-3 px-4">${paymentBadge}</td>
+                            <td class="py-3 px-4">${shippingDisplay}</td>
+                            <td class="py-3 px-4">${deliveredActionCell}</td>
+                            <td class="py-3 px-4 text-right">
+                                <div class="flex items-center justify-end gap-1.5 flex-wrap">
+                                    <button onclick="openWhatsAppModal('${orderId}')" class="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 rounded-lg text-[11px] font-semibold transition-colors flex items-center gap-1 cursor-pointer" title="Send WhatsApp Message">
+                                        <i class="fa-brands fa-whatsapp text-emerald-600 text-xs"></i> WhatsApp
+                                    </button>
+                                    ${!order.shipping?.shiprocketOrderId && status !== 'CANCELLED' ? `
+                                        <button onclick="moveOrderToShiprocket('${orderId}')" class="px-2 py-1 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg text-[11px] font-semibold transition-colors flex items-center gap-1 cursor-pointer" title="Move this order to Shiprocket">
+                                            <i class="fa-solid fa-truck-fast text-xs"></i> Shiprocket
+                                        </button>
+                                    ` : ''}
+                                    ${order.shipping && order.shipping.shiprocketOrderId ? `
+                                        <a href="${WORKER_BASE}/api/shipments/${orderId}/label?redirect=1" target="_blank" class="px-2 py-1 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 rounded-lg text-[11px] font-semibold transition-colors flex items-center gap-1 cursor-pointer" title="Download Shipping Label">
+                                            <i class="fa-solid fa-tag text-xs"></i> Label
+                                        </a>
+                                        <a href="${WORKER_BASE}/api/shipments/${orderId}/invoice?redirect=1" target="_blank" class="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 rounded-lg text-[11px] font-semibold transition-colors flex items-center gap-1 cursor-pointer" title="Download Tax Invoice">
+                                            <i class="fa-solid fa-file-invoice text-xs"></i> Invoice
+                                        </a>
+                                    ` : ''}
+                                    <button onclick="openOrderDetail('${orderId}')" class="px-2 py-1 bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 rounded-lg text-[11px] font-medium transition-colors cursor-pointer" title="View full details">
+                                        View
+                                    </button>
+                                    ${status !== 'CANCELLED' ? `
+                                        <button onclick="promptCancelOrder('${orderId}')" class="px-2 py-1 bg-white hover:bg-amber-50 border border-amber-200 text-amber-700 rounded-lg text-[11px] font-medium transition-colors cursor-pointer" title="Cancel this order">
+                                            Cancel
+                                        </button>
+                                    ` : ''}
+                                    <button onclick="promptPermanentDeleteOrder('${orderId}')" class="px-2 py-1 bg-white hover:bg-rose-50 border border-rose-200 text-rose-600 rounded-lg text-[11px] font-medium transition-colors cursor-pointer" title="Permanently delete order from database">
+                                        <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            // Mobile Cards HTML (<768px screens)
+            if (mobileContainer) {
+                mobileContainer.innerHTML = orders.map(order => {
+                    const orderId = order.orderId || 'N/A';
+                    const dateStr = order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '-';
+                    const customerName = (order.customer && order.customer.name) || 'Customer';
+                    const customerPhone = (order.customer && order.customer.phone) || '';
+                    const cleanPhone = String(customerPhone).replace(/\D/g, '');
+                    const customerCity = (order.customer && order.customer.city) || '';
+                    const customerPincode = (order.customer && order.customer.pincode) || '';
+                    const customerAddr = (order.customer && (order.customer.address || [customerCity, customerPincode].filter(Boolean).join(' - '))) || '';
+                    const itemsCount = (order.items || []).reduce((s, i) => s + (i.quantity || 1), 0);
+                    const itemsNames = (order.items || []).map(i => `${i.name || i.variantName} (x${i.quantity || 1})`).join(', ');
+                    const total = order.pricing ? `₹${parseFloat(order.pricing.total).toFixed(2)}` : '₹0.00';
+
+                    const isCod = getOrderIsCod(order);
+                    const paymentStatus = ((order.payment && order.payment.status) || (isCod ? 'COD_PENDING' : 'PENDING')).toUpperCase();
+                    const status = (order.status || 'PENDING').toUpperCase();
+                    const isDelivered = status === 'DELIVERED';
+                    const isOnlinePaid = !isCod && (paymentStatus === 'CAPTURED' || paymentStatus === 'PAID_ONLINE' || status === 'CONFIRMED' || status === 'PAYMENT_CAPTURED' || status === 'SHIPMENT_BOOKED' || status === 'SHIPPED' || status === 'DELIVERED' || status === 'IN_TRANSIT' || Boolean(order.payment && (order.payment.cashfreePaymentId || order.payment.razorpayPaymentId || order.payment.status === 'CAPTURED' || order.payment.status === 'PAID_ONLINE')));
+
+                    let statusBadge = '';
+                    if (isDelivered) {
+                        statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9.5px] font-black bg-emerald-600 text-white flex items-center gap-1"><i class="fa-solid fa-circle-check text-[9px]"></i> Delivered</span>`;
+                    } else if (status === 'CANCELLED') {
+                        statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-rose-100 text-rose-700 border border-rose-200">Cancelled</span>`;
+                    } else if (status === 'PAYMENT_FAILED') {
+                        statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-rose-100 text-rose-800 border border-rose-300 flex items-center gap-1"><i class="fa-solid fa-circle-xmark text-[9px]"></i> Failed</span>`;
+                    } else if (status === 'PAYMENT_PENDING') {
+                        statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-amber-100 text-amber-800 border border-amber-200">⏳ Pending</span>`;
+                    } else if (isOnlinePaid) {
+                        statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">⚡ Paid Online</span>`;
+                    } else if (isCod) {
+                        statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-amber-50 text-amber-800 border border-amber-200">💵 COD Booked</span>`;
+                    } else {
+                        statusBadge = `<span class="px-2 py-0.5 rounded-full text-[9.5px] font-medium bg-gray-100 text-gray-700">${status}</span>`;
+                    }
+
+                    // Mobile Delivered Toggle Button
+                    let mobileDeliveredBtn = '';
+                    if (status !== 'CANCELLED') {
+                        if (isDelivered) {
+                            mobileDeliveredBtn = `
+                                <button onclick="toggleDeliveredStatus('${orderId}', false)" class="flex-1 py-2 px-3 bg-emerald-600 active:bg-rose-600 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    <span>Delivered ✓</span>
+                                </button>
+                            `;
+                        } else {
+                            mobileDeliveredBtn = `
+                                <button onclick="toggleDeliveredStatus('${orderId}', true)" class="flex-1 py-2 px-3 bg-emerald-50 active:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold transition-all shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer">
+                                    <i class="fa-regular fa-circle-check text-emerald-600"></i>
+                                    <span>Mark Delivered</span>
+                                </button>
+                            `;
+                        }
+                    }
+
+                    return `
+                        <div class="bg-white rounded-2xl border border-gray-200/90 p-3.5 sm:p-4 shadow-xs hover:shadow-sm transition-shadow space-y-2.5 ${isDelivered ? 'bg-emerald-50/10' : ''}">
+                            <!-- Header: Order ID & Date -->
+                            <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <button onclick="openOrderDetail('${orderId}')" class="font-mono font-extrabold text-xs text-emerald-900 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 flex items-center gap-1 cursor-pointer">
+                                        <i class="fa-solid fa-receipt text-[10px] text-emerald-700"></i>
+                                        <span>#${orderId}</span>
+                                    </button>
+                                    ${statusBadge}
+                                </div>
+                                <div class="text-[10.5px] text-gray-400 font-medium">${dateStr}</div>
+                            </div>
+
+                            <!-- Customer Information & 1-Tap Quick Action Buttons -->
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="min-w-0 flex-1">
+                                    <div class="font-bold text-xs sm:text-sm text-gray-900 truncate flex items-center gap-1.5">
+                                        <div class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[9px] flex items-center justify-center shrink-0">
+                                            ${customerName[0] || 'C'}
+                                        </div>
+                                        <span class="truncate">${customerName}</span>
+                                    </div>
+                                    <div class="text-[10.5px] text-gray-500 truncate mt-0.5 flex items-center gap-1 pl-6">
+                                        <i class="fa-solid fa-location-dot text-gray-400 text-[9px]"></i>
+                                        <span class="truncate">${customerAddr || customerCity || 'Address on file'}</span>
+                                    </div>
+                                </div>
+
+                                <!-- 1-Tap Phone Call & 1-Tap WhatsApp -->
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    ${cleanPhone ? `
+                                        <a href="tel:+91${cleanPhone}" class="w-8 h-8 rounded-xl bg-gray-100 active:bg-emerald-100 text-gray-700 hover:text-emerald-800 border border-gray-200 flex items-center justify-center text-xs transition-colors" title="Call Customer">
+                                            <i class="fa-solid fa-phone text-xs"></i>
+                                        </a>
+                                        <button onclick="openWhatsAppModal('${orderId}')" class="w-8 h-8 rounded-xl bg-emerald-50 active:bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center justify-center text-sm transition-colors cursor-pointer" title="WhatsApp Customer">
+                                            <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+
+                            <!-- Items & Financial Pill -->
+                            <div class="bg-gray-50/80 rounded-xl p-2.5 border border-gray-100 flex items-center justify-between">
+                                <div class="min-w-0 pr-2">
+                                    <div class="text-[11px] font-bold text-gray-800 truncate">${itemsNames || 'Magical Seeds Pack'}</div>
+                                    <div class="text-[10px] text-gray-500">${itemsCount} unit${itemsCount > 1 ? 's' : ''} • ${isCod ? 'Cash on Delivery' : 'Prepaid'}</div>
+                                </div>
+                                <div class="text-right shrink-0">
+                                    <div class="text-xs sm:text-sm font-black text-gray-900">${total}</div>
+                                    <div class="text-[9.5px] font-bold ${isOnlinePaid ? 'text-emerald-700' : (isCod ? 'text-amber-700' : 'text-gray-400')}">${isOnlinePaid ? '⚡ Paid' : (isCod ? '💵 COD' : 'Pending')}</div>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Action Bar: 1-Click Delivery Toggle + Details -->
+                            <div class="flex items-center gap-2 pt-0.5">
+                                ${mobileDeliveredBtn}
+                                <button onclick="openOrderDetail('${orderId}')" class="px-3 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs">
+                                    <span>Details</span>
+                                    <i class="fa-solid fa-chevron-right text-[9px] text-gray-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // ==========================================
+        // EXPORT TO EXCEL (.XLSX)
+        // ==========================================
+        function exportToExcel() {
+            if (!currentOrdersList || currentOrdersList.length === 0) {
+                alert("No orders available to export.");
+                return;
+            }
+
+            const exportData = currentOrdersList.map((order, idx) => {
+                const customer = order.customer || {};
+                const shipping = order.shipping || {};
+                const pricing = order.pricing || {};
+                const payment = order.payment || {};
+                const itemsStr = (order.items || []).map(i => `${i.name || i.variantName} (Qty: ${i.quantity || 1}, SKU: ${i.sku || 'N/A'})`).join('; ');
+                const totalUnits = (order.items || []).reduce((s, i) => s + (i.quantity || 1), 0);
+
+                return {
+                    'S.No': idx + 1,
+                    'Order ID': order.orderId || '',
+                    'Order Date': order.createdAt ? new Date(order.createdAt).toLocaleString('en-IN') : '',
+                    'Customer Name': customer.name || '',
+                    'Phone Number': customer.phone || '',
+                    'Email Address': customer.email || '',
+                    'Delivery Address': `${customer.addressLine1 || ''} ${customer.addressLine2 || ''}`.trim(),
+                    'City': customer.city || '',
+                    'State': customer.state || '',
+                    'Pincode': customer.pincode || '',
+                    'Items Description': itemsStr,
+                    'Total Quantity': totalUnits,
+                    'Subtotal (Rs)': pricing.subtotal || 0,
+                    'Coupon Code': pricing.couponCode || 'None',
+                    'Coupon Discount (Rs)': pricing.discount || 0,
+                    'Online Discount 5% (Rs)': pricing.onlineDiscount || 0,
+                    'COD Fee (Rs)': pricing.codCharge || 0,
+                    'Shipping Fee (Rs)': pricing.shipping || 0,
+                    'Total Amount (Rs)': pricing.total || 0,
+                    'Payment Method': (order.paymentMethod === 'cod' || order.payment?.method === 'COD') ? 'Cash on Delivery' : 'Online Payment (Cashfree)',
+                    'Payment Status': payment.status || (order.paymentMethod === 'cod' ? 'COD_PENDING' : 'PENDING'),
+                    'Delivery Settlement': order.status === 'DELIVERED' ? 'DELIVERED (Realized)' : (order.status || 'PENDING'),
+                    'Courier Partner': shipping.courierName || '',
+                    'AWB Tracking Number': shipping.awb || '',
+                    'Shiprocket Order ID': shipping.shiprocketOrderId || ''
+                };
+            });
+
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const colWidths = Object.keys(exportData[0] || {}).map(k => ({ wch: Math.max(k.length + 3, 14) }));
+            ws['!cols'] = colWidths;
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Orders");
+
+            const todayStr = new Date().toISOString().slice(0, 10);
+            XLSX.writeFile(wb, `Aab_E_Hayat_Orders_${todayStr}.xlsx`);
+        }
+
+        // ==========================================
+        // EXPORT TO CSV (.CSV)
+        // ==========================================
+        function exportToCSV() {
+            if (!currentOrdersList || currentOrdersList.length === 0) {
+                alert("No orders available to export.");
+                return;
+            }
+
+            const headers = [
+                'Order ID', 'Date', 'Customer Name', 'Phone', 'Email', 'Address', 'City', 'State', 'Pincode',
+                'Items', 'Units', 'Subtotal', 'Coupon', 'Coupon Discount', 'Online Discount', 'COD Fee',
+                'Shipping Fee', 'Total Amount', 'Payment Method', 'Payment Status', 'Delivery Settlement', 'Courier', 'AWB'
+            ];
+
+            const rows = currentOrdersList.map(order => {
+                const customer = order.customer || {};
+                const shipping = order.shipping || {};
+                const pricing = order.pricing || {};
+                const payment = order.payment || {};
+                const itemsStr = (order.items || []).map(i => `${i.name || i.variantName} (x${i.quantity || 1})`).join(' | ');
+                const totalUnits = (order.items || []).reduce((s, i) => s + (i.quantity || 1), 0);
+                const fullAddress = `${customer.addressLine1 || ''} ${customer.addressLine2 || ''}`.trim();
+
+                return [
+                    order.orderId || '',
+                    order.createdAt ? new Date(order.createdAt).toLocaleString('en-IN') : '',
+                    customer.name || '',
+                    customer.phone || '',
+                    customer.email || '',
+                    fullAddress,
+                    customer.city || '',
+                    customer.state || '',
+                    customer.pincode || '',
+                    itemsStr,
+                    totalUnits,
+                    pricing.subtotal || 0,
+                    pricing.couponCode || 'None',
+                    pricing.discount || 0,
+                    pricing.onlineDiscount || 0,
+                    pricing.codCharge || 0,
+                    pricing.shipping || 0,
+                    pricing.total || 0,
+                    order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment',
+                    payment.status || (order.paymentMethod === 'cod' ? 'COD_PENDING' : 'PENDING'),
+                    order.status || 'PENDING',
+                    shipping.courierName || '',
+                    shipping.awb || ''
+                ].map(field => {
+                    const str = String(field).replace(/"/g, '""');
+                    return `"${str}"`;
+                }).join(',');
+            });
+
+            const csvContent = '\uFEFF' + [headers.map(h => `"${h}"`).join(','), ...rows].join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            const todayStr = new Date().toISOString().slice(0, 10);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `Aab_E_Hayat_Orders_${todayStr}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // ==========================================
+        // EXPORT TO PDF REPORT (.PDF)
+        // ==========================================
+        function exportToPDF() {
+            if (!currentOrdersList || currentOrdersList.length === 0) {
+                alert("No orders available to export.");
+                return;
+            }
+
+            if (!window.jspdf || !window.jspdf.jsPDF) {
+                alert("PDF library is loading. Please try again in a moment.");
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('landscape', 'pt', 'a4');
+            const todayStr = new Date().toLocaleString('en-IN');
+
+            // Header Banner
+            doc.setFillColor(79, 70, 229);
+            doc.rect(0, 0, 842, 60, 'F');
+
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text("AAB-E-HAYAT BOTANICAL STORE — ORDERS REPORT", 30, 36);
+
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Generated on: ${todayStr}`, 640, 36);
+
+            // Metrics Summary Info
+            let totalRevenue = 0;
+            let deliveredRevenue = 0;
+            let deliveredCount = 0;
+            for (const o of currentOrdersList) {
+                const total = o.pricing?.total || 0;
+                if ((o.status || '').toUpperCase() !== 'CANCELLED') {
+                    totalRevenue += total;
+                    if ((o.status || '').toUpperCase() === 'DELIVERED') {
+                        deliveredRevenue += total;
+                        deliveredCount++;
+                    }
+                }
+            }
+
+            doc.setTextColor(17, 24, 39);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.text("Summary Overview:", 30, 82);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            doc.text(`Total Filtered Orders: ${currentOrdersList.length} | Gross Booked: Rs. ${totalRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2 })} | Delivered Realized: Rs. ${deliveredRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2 })} (${deliveredCount} Delivered)`, 30, 98);
+
+            // Prepare Table Data
+            const tableRows = currentOrdersList.map((order, idx) => {
+                const customer = order.customer || {};
+                const shipping = order.shipping || {};
+                const pricing = order.pricing || {};
+                const dateShort = order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : '-';
+                const itemsShort = (order.items || []).map(i => `${i.name || i.variantName} (x${i.quantity || 1})`).join(', ');
+
+                return [
+                    idx + 1,
+                    order.orderId || '',
+                    dateShort,
+                    customer.name || 'Customer',
+                    customer.phone || '-',
+                    customer.city || '',
+                    itemsShort,
+                    order.paymentMethod === 'cod' ? 'COD' : 'Online',
+                    `Rs. ${(pricing.total || 0).toFixed(0)}`,
+                    shipping.awb || 'Not Booked',
+                    order.status === 'DELIVERED' ? 'DELIVERED ✓' : (order.status || 'PENDING')
+                ];
+            });
+
+            doc.autoTable({
+                startY: 110,
+                head: [['#', 'Order ID', 'Date', 'Customer', 'Phone', 'City', 'Items', 'Payment', 'Amount', 'AWB', 'Status']],
+                body: tableRows,
+                theme: 'striped',
+                headStyles: { fillColor: [30, 41, 59], textColor: [255, 255, 255], fontSize: 8, fontStyle: 'bold' },
+                styles: { fontSize: 7.5, cellPadding: 4, overflow: 'linebreak' },
+                columnStyles: {
+                    0: { cellWidth: 20 },
+                    1: { cellWidth: 65, fontStyle: 'bold' },
+                    2: { cellWidth: 45 },
+                    3: { cellWidth: 80 },
+                    4: { cellWidth: 65 },
+                    5: { cellWidth: 55 },
+                    6: { cellWidth: 170 },
+                    7: { cellWidth: 45 },
+                    8: { cellWidth: 55, fontStyle: 'bold', halign: 'right' },
+                    9: { cellWidth: 70 },
+                    10: { cellWidth: 70 }
+                },
+                didDrawPage: function (data) {
+                    const str = "Page " + doc.internal.getNumberOfPages();
+                    doc.setFontSize(8);
+                    doc.setTextColor(150);
+                    doc.text(str, 842 - 60, 595 - 20);
+                }
+            });
+
+            const fileDate = new Date().toISOString().slice(0, 10);
+            doc.save(`Aab_E_Hayat_Orders_Report_${fileDate}.pdf`);
+        }
+
+        // Open Order Details Modal
+        function openOrderDetail(orderId) {
+            const order = currentOrdersList.find(o => o.orderId === orderId);
+            if (!order) return;
+
+            document.getElementById('modal-order-id').textContent = `Order ${order.orderId}`;
+            
+            const isCancelled = order.status === 'CANCELLED';
+            const isDelivered = order.status === 'DELIVERED';
+            const isCod = getOrderIsCod(order);
+            const prov = (order.payment?.provider || order.payment?.method || (isCod ? 'cod' : 'online')).toLowerCase();
+
+            const paymentStatus = ((order.payment && order.payment.status) || (isCod ? (isDelivered ? 'CAPTURED' : 'COD_PENDING') : 'PENDING')).toUpperCase();
+            const awb = order.shipping && order.shipping.awb;
+            const courierName = order.shipping && order.shipping.courierName;
+            const shippingStatus = ((order.shipping && order.shipping.status) || (isCod && !awb ? 'OTP_NOT_VERIFIED' : 'NOT_BOOKED')).toUpperCase();
+            const status = (order.status || 'PENDING').toUpperCase();
+            const isOnlinePaid = !isCod && (paymentStatus === 'CAPTURED' || paymentStatus === 'PAID_ONLINE' || status === 'CONFIRMED' || status === 'PAYMENT_CAPTURED' || (order.payment && (order.payment.cashfree_payment_id || order.payment.cashfreePaymentId || order.payment.payment_id || order.payment.razorpayPaymentId)));
+            const isOnlinePendingPayment = !isCod && !isOnlinePaid && status !== 'CANCELLED';
+
+            // Set badge in header
+            const badgeEl = document.getElementById('modal-order-badge');
+            if (badgeEl) {
+                let badgeClass = 'bg-gray-100 text-gray-700';
+                if (status === 'CANCELLED') badgeClass = 'bg-rose-50 text-rose-700 border border-rose-200';
+                else if (isDelivered) badgeClass = 'bg-emerald-600 text-white font-black';
+                else if (['SHIPMENT_BOOKED', 'SHIPPED'].includes(status)) badgeClass = 'bg-blue-50 text-blue-700 border border-blue-200';
+                else if (status === 'PAYMENT_CAPTURED') badgeClass = 'bg-indigo-50 text-indigo-700 border border-indigo-200';
+                badgeEl.className = `px-2 py-0.5 rounded text-[10px] font-bold ${badgeClass}`;
+                badgeEl.textContent = status;
+            }
+
+            const itemsHtml = (order.items || []).map(i => {
+                const itemQty = parseInt(i.quantity || i.qty || 1, 10);
+                const rawPrice = i.unitPrice ?? i.price ?? i.sellingPrice ?? i.rate ?? (order.pricing?.subtotal ? (order.pricing.subtotal / (order.items?.length || 1)) : 0);
+                const itemPrice = parseFloat(rawPrice || 0);
+                const lineTotal = itemPrice * itemQty;
+                return `
+                    <div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-lg border border-[#E5E7EB]">
+                        <div>
+                            <div class="font-bold text-[#111827]">${i.name || i.variantName || 'Item'}</div>
+                            <div class="text-[10px] text-gray-500 font-mono">SKU: ${i.sku || 'N/A'} • Qty: ${itemQty}</div>
+                        </div>
+                        <div class="font-bold text-indigo-600">
+                            Rs. ${itemPrice.toFixed(2)}${itemQty > 1 ? ` <span class="text-gray-500 text-xs font-normal">(Total: Rs. ${lineTotal.toFixed(2)})</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const eventsHtml = (order.events || []).map(e => `
+                <div class="text-[11px] pb-1.5 border-b border-gray-100 last:border-0">
+                    <span class="font-semibold text-[#111827]">${e.event}</span>
+                    <span class="text-gray-400 text-[10px] ml-1">(${new Date(e.timestamp).toLocaleTimeString()})</span>
+                    <p class="text-gray-500 text-[10px] mt-0.5">${e.details || ''}</p>
+                </div>
+            `).join('');
+
+            const modalBody = document.getElementById('modal-order-body');
+            modalBody.innerHTML = `
+                <!-- Customer & Address Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="bg-gray-50 p-3 rounded-lg border border-[#E5E7EB] space-y-1">
+                        <div class="font-bold text-[#111827] text-xs mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user text-indigo-600"></i> Customer Info
+                        </div>
+                        <div><b>Name:</b> ${order.customer?.name || '-'}</div>
+                        <div><b>Phone:</b> <a href="tel:${order.customer?.phone}" class="text-indigo-600 underline">${order.customer?.phone || '-'}</a></div>
+                        <div><b>Email:</b> ${order.customer?.email || '-'}</div>
+                    </div>
+
+                    <div class="bg-gray-50 p-3 rounded-lg border border-[#E5E7EB] space-y-1">
+                        <div class="font-bold text-[#111827] text-xs mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-location-dot text-indigo-600"></i> Shipping Address
+                        </div>
+                        <div>${order.customer?.addressLine1 || '-'}</div>
+                        <div>${order.customer?.addressLine2 ? order.customer.addressLine2 + ', ' : ''}${order.customer?.city || ''}</div>
+                        <div>${order.customer?.state || ''} - <b>${order.customer?.pincode || ''}</b></div>
+                    </div>
+                </div>
+
+                <!-- Items Purchased -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="font-bold text-[#111827] text-xs">Purchased Items</div>
+                        ${status !== 'CANCELLED' ? `
+                            <button type="button" onclick="openChangeProductModal('${order.orderId}')" class="px-2.5 py-1 text-[11px] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs transition-colors">
+                                <i class="fa-solid fa-repeat text-indigo-600"></i> Change / Swap Product
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="space-y-1.5">${itemsHtml}</div>
+                </div>
+
+                <!-- Pricing & Payment Breakdown -->
+                <div class="bg-indigo-50/50 p-3.5 rounded-lg border border-indigo-100 space-y-1.5">
+                    <div class="flex justify-between"><span>Items Subtotal:</span> <span>Rs. ${order.pricing?.subtotal || 0}</span></div>
+                    ${order.pricing?.discount ? `<div class="flex justify-between text-emerald-700"><span>Coupon Discount (${order.pricing?.couponCode}):</span> <span>-Rs. ${order.pricing?.discount}</span></div>` : ''}
+                    ${order.pricing?.onlineDiscount ? `<div class="flex justify-between text-emerald-700 font-bold"><span>Online Discount (5% OFF):</span> <span>-Rs. ${order.pricing?.onlineDiscount}</span></div>` : ''}
+                    ${order.pricing?.codCharge ? `<div class="flex justify-between text-amber-800 font-bold"><span>COD Handling Charge:</span> <span>+Rs. ${order.pricing?.codCharge}</span></div>` : ''}
+                    <div class="flex justify-between"><span>Delivery:</span> <span>${order.pricing?.shipping ? `Rs. ${order.pricing.shipping}` : 'FREE'}</span></div>
+                    <div class="flex justify-between font-bold text-sm text-[#111827] pt-1 border-t border-indigo-200">
+                        <span>Total Payable:</span> 
+                        <span class="text-indigo-700">Rs. ${order.pricing?.total || 0}</span>
+                    </div>
+                    <div class="text-[10px] text-gray-500 pt-1">
+                        <b>Payment Method:</b> ${order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment (5% OFF)'} • <b>Status:</b> ${paymentStatus}
+                    </div>
+                </div>
+
+                <!-- Shipping & Shiprocket Details -->
+                <div class="bg-gray-50 p-3.5 rounded-lg border border-[#E5E7EB] space-y-1.5">
+                    <div class="font-bold text-[#111827] text-xs mb-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-truck text-indigo-600"></i> Shipment & Delivery Settlement
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><b>Courier:</b> ${courierName || 'Pending'}</div>
+                        <div><b>AWB:</b> <span class="font-mono font-bold text-indigo-600">${awb || 'Not Generated'}</span></div>
+                        <div><b>Delivery Status:</b> <span class="font-bold ${isDelivered ? 'text-emerald-700' : 'text-gray-700'}">${status}</span></div>
+                        <div><b>Shiprocket Order:</b> #${order.shipping?.shiprocketOrderId || 'None'}</div>
+                    </div>
+                </div>
+
+                <!-- Event History Logs -->
+                <div>
+                    <div class="font-bold text-[#111827] text-xs mb-1.5">Activity History</div>
+                    <div class="bg-gray-50 p-2.5 rounded-lg border border-[#E5E7EB] space-y-1">
+                        ${eventsHtml || '<div class="text-gray-400">No events logged.</div>'}
+                    </div>
+                </div>
+            `;
+
+            const actionContainer = document.getElementById('modal-action-buttons');
+            actionContainer.innerHTML = `
+                <!-- 1-Click WhatsApp Button in Modal -->
+                <button onclick="openWhatsAppModal('${order.orderId}')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs" title="Send WhatsApp Message / Confirmation to Customer">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>WhatsApp Customer</span>
+                </button>
+
+                <!-- Change Product Button in Modal Actions -->
+                ${status !== 'CANCELLED' ? `
+                    <button onclick="openChangeProductModal('${order.orderId}')" class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-300 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs" title="Change product, language kit, or variant">
+                        <i class="fa-solid fa-repeat text-xs"></i>
+                        <span>Change Product</span>
+                    </button>
+                ` : ''}
+
+                <!-- Move to Shiprocket button (Confirm & Dispatch) -->
+                ${!order.shipping?.shiprocketOrderId && status !== 'CANCELLED' ? `
+                    <button onclick="moveOrderToShiprocket('${order.orderId}')" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs" title="Move order to Shiprocket upon phone confirmation">
+                        <i class="fa-solid fa-truck-fast text-xs"></i>
+                        <span>Move to Shiprocket</span>
+                    </button>
+                ` : ''}
+
+                <!-- 1-Click Delivered Toggle in Modal -->
+                ${status !== 'CANCELLED' ? `
+                    <button onclick="closeOrderDetailModal(); toggleDeliveredStatus('${order.orderId}', ${!isDelivered});" class="px-3.5 py-2 ${isDelivered ? 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs'} rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid ${isDelivered ? 'fa-rotate-left' : 'fa-circle-check'}"></i>
+                        <span>${isDelivered ? 'Uncheck / Revert Delivery' : 'Mark as Delivered (Settled)'}</span>
+                    </button>
+                ` : ''}
+
+                ${!isCancelled ? `
+                    <button onclick="closeOrderDetailModal(); promptCancelOrder('${order.orderId}');" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-semibold cursor-pointer">
+                        <i class="fa-solid fa-ban mr-1"></i> Cancel Order
+                    </button>
+                ` : '<span class="text-xs text-amber-700 font-semibold bg-amber-50 px-2 py-1 rounded border border-amber-200">Order is Cancelled</span>'}
+
+                <button onclick="closeOrderDetailModal(); promptPermanentDeleteOrder('${order.orderId}');" class="px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 rounded-lg text-xs font-semibold cursor-pointer flex items-center gap-1" title="Permanently delete from database">
+                    <i class="fa-solid fa-trash-can text-xs"></i> Permanent Delete
+                </button>
+            `;
+
+            document.getElementById('order-detail-modal').classList.remove('hidden');
+        }
+
+        // ==========================================
+        // WHATSAPP MESSAGING SYSTEM WITH FIREBASE TEMPLATES
+        // ==========================================
+        let currentWhatsAppOrderId = null;
+        let currentWhatsAppTemplate = 'order_accepted';
+        let savedWhatsAppTemplates = {};
+
+        const DEFAULT_WHATSAPP_TEMPLATES = {
+            order_accepted: `Assalamu Alaikum! Your order from Magical Seeds for {itemsText} has been confirmed. Estimated delivery date: {estDeliveryDate}! 🌿✨\n\n*Order Summary:*\n📋 *Order ID:* #{orderId}\n💰 *Total Amount:* *{totalAmount}* ({paymentMethodText})\n📍 *Delivery Address:* {deliveryAddress}\n📞 *Customer Helpline:* +91 99609 97808`,
+
+            payment_link: `Assalamu Alaikum *{customerName}*! 🌿\n\nYour order (*#{orderId}*) for *{itemsText}* (Total: *{totalAmount}*) at *Magical Seeds* is reserved.\n\nPlease complete payment below for express dispatch:\n👉 {orderUrl}\n\n📞 *Call / WhatsApp Helpline:* +91 99609 97808\n\nRegards,\n*Magical Seeds Team*`,
+
+            payment_pending_cod: `Assalamu Alaikum *{customerName}*! 🌿\n\nWe noticed your online payment for order (*#{orderId}*) for *{itemsText}* (Total: *{totalAmount}*) was not completed.\n\n💡 *Would you like us to switch your order to Cash on Delivery (COD) and deliver it directly to your address?*\n\n📍 *Delivery Address:* {deliveryAddress}\n🗓️ *Estimated Delivery:* {estDeliveryDate}\n\n👉 Please reply *YES* to dispatch via Cash on Delivery 🚚\n📞 *Call to confirm:* +91 99609 97808\n\nRegards,\n*Magical Seeds Team*`,
+
+            shipped: `Assalamu Alaikum *{customerName}*! 🌿\n\nGreat news! Your order (*#{orderId}*) for *{itemsText}* has been dispatched via *{courier}* 🚚\n\n📦 *Tracking AWB:* *{awb}*\n🗓️ *Estimated Delivery:* *{estDeliveryDate}*\n🔗 *Track Live:* {orderUrl}\n📞 *Support Helpline:* +91 99609 97808\n\nRegards,\n*Magical Seeds*`,
+
+            cod_followup: `Assalamu Alaikum *{customerName}*! 🌿\n\nYour Cash on Delivery order (*#{orderId}*) for *{itemsText}* (Total: *{totalAmount}*) is ready to be dispatched to *{city}*.\n\n👉 Please reply *YES* to confirm this order for immediate dispatch! 🚚\n📞 *Or call to confirm:* +91 99609 97808\n\nRegards,\n*Magical Seeds Team*`,
+
+            delivered: `Assalamu Alaikum *{customerName}*! 🌿\n\nYour order (*#{orderId}*) of *Magical Seeds* has been delivered! 🎉\n\nEnjoy pure natural superfood goodness daily.\n📞 *Customer Helpline:* +91 99609 97808\n\nRegards,\n*Magical Seeds*`,
+
+            custom: `Assalamu Alaikum *{customerName}*! 🌿\n\nRegarding your order (*#{orderId}*) of Magical Seeds:\n\n📞 *Customer Care:* +91 99609 97808\n\nRegards,\n*Magical Seeds Team*`
+        };
+
+        async function loadWhatsAppTemplatesFromFirebase() {
+            if (!currentAdminToken) return;
+            try {
+                const res = await fetch(`${WORKER_BASE}/api/admin/whatsapp/templates`, {
+                    headers: { 'Authorization': `Bearer ${currentAdminToken}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && data.templates) {
+                        savedWhatsAppTemplates = data.templates;
+                    }
+                }
+            } catch (err) {
+                console.warn("Could not load WhatsApp templates from Firebase:", err);
+            }
+        }
+
+        function formatOrderItemsForWhatsApp(order) {
+            if (order.product && order.product.name) {
+                const qty = order.product.quantity || 1;
+                return `${order.product.name} (${qty} Bottle${qty > 1 ? 's' : ''})`;
+            }
+            if (order.items && order.items.length > 0) {
+                return order.items.map(i => `${i.name || 'AAB-E-HAYAT Juice'} (Qty: ${i.qty || 1})`).join(', ');
+            }
+            return 'AAB-E-HAYAT™ Natural Botanical Juice (500ml)';
+        }
+
+        function calculateEstimatedDeliveryRange(orderDate) {
+            const base = orderDate ? new Date(orderDate) : new Date();
+            const startD = new Date(base.getTime() + 2 * 86400000);
+            const endD = new Date(base.getTime() + 3 * 86400000);
+            const startDay = startD.getDate();
+            const endDay = endD.getDate();
+            const monthName = endD.toLocaleString('en-US', { month: 'long' });
+            const year = endD.getFullYear();
+            return `${startDay}-${endDay} ${monthName} ${year}`;
+        }
+
+        function generateWhatsAppMessage(order, templateKey) {
+            if (!order) return '';
+            const customerName = (order.customer && order.customer.name) || 'Customer';
+            const orderId = order.orderId || 'Order';
+            const totalAmount = order.pricing && order.pricing.total ? `Rs. ${order.pricing.total}` : 'Rs. 0';
+            const isCod = getOrderIsCod(order);
+            const paymentMethodText = isCod ? 'Cash on Delivery' : 'Paid Online';
+            const itemsText = formatOrderItemsForWhatsApp(order);
+            const estDeliveryDate = calculateEstimatedDeliveryRange(order.createdAt);
+            const orderUrl = `${window.location.origin}/order-status.html?orderId=${encodeURIComponent(orderId)}`;
+            const city = order.customer?.city || 'your address';
+            const fullAddress = [order.customer?.addressLine1, order.customer?.city, order.customer?.state, order.customer?.pincode].filter(Boolean).join(', ') || city;
+            const awb = order.shipping && order.shipping.awb ? order.shipping.awb : 'Assigned';
+            const courier = order.shipping && order.shipping.courierName ? order.shipping.courierName : 'Shiprocket Express';
+
+            let rawTpl = savedWhatsAppTemplates[templateKey] || DEFAULT_WHATSAPP_TEMPLATES[templateKey] || DEFAULT_WHATSAPP_TEMPLATES.custom;
+
+            let msg = rawTpl
+                .replace(/{customerName}/g, customerName)
+                .replace(/{orderId}/g, orderId)
+                .replace(/{itemsText}/g, itemsText)
+                .replace(/{totalAmount}/g, totalAmount)
+                .replace(/{paymentMethodText}/g, paymentMethodText)
+                .replace(/{deliveryAddress}/g, fullAddress)
+                .replace(/{city}/g, city)
+                .replace(/{estDeliveryDate}/g, estDeliveryDate)
+                .replace(/{orderUrl}/g, orderUrl)
+                .replace(/{courier}/g, courier)
+                .replace(/{awb}/g, awb)
+                .replace(/{helplinePhone}/g, '+91 99609 97808');
+
+            return msg;
+        }
+
+        async function saveCurrentTemplateToFirebase() {
+            if (!currentWhatsAppTemplate) return;
+            const textarea = document.getElementById('wa-message-textarea');
+            if (!textarea) return;
+
+            const text = textarea.value.trim();
+            if (!text) {
+                alert("Cannot save an empty template.");
+                return;
+            }
+
+            const btn = document.getElementById('wa-save-template-btn');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-emerald-600"></i> <span>Saving to Firebase...</span>`;
+            }
+
+            try {
+                savedWhatsAppTemplates[currentWhatsAppTemplate] = text;
+                const response = await fetch(`${WORKER_BASE}/api/admin/whatsapp/templates`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentAdminToken}`
+                    },
+                    body: JSON.stringify({ templates: savedWhatsAppTemplates })
+                });
+
+                const resData = await response.json();
+                if (response.ok && resData.success) {
+                    if (btn) {
+                        btn.innerHTML = `<i class="fa-solid fa-check text-emerald-600"></i> <span class="text-emerald-700 font-bold">Saved in Firebase!</span>`;
+                    }
+                    setTimeout(() => {
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.innerHTML = origHtml;
+                        }
+                    }, 2000);
+                } else {
+                    throw new Error(resData.error || 'Could not save to Firebase.');
+                }
+            } catch (err) {
+                console.error("Save template error:", err);
+                alert(`⚠️ Error saving template to Firebase: ${err.message}`);
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origHtml;
+                }
+            }
+        }
+
+        async function resetCurrentTemplateToDefault() {
+            if (!currentWhatsAppTemplate) return;
+            if (!confirm(`Reset "${currentWhatsAppTemplate}" template to default settings?`)) return;
+
+            delete savedWhatsAppTemplates[currentWhatsAppTemplate];
+            if (currentAdminToken) {
+                await fetch(`${WORKER_BASE}/api/admin/whatsapp/templates`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentAdminToken}`
+                    },
+                    body: JSON.stringify({ templates: savedWhatsAppTemplates })
+                }).catch(() => {});
+            }
+
+            selectWhatsAppTemplate(currentWhatsAppTemplate);
+        }
+
+        async function openWhatsAppModal(orderId, defaultTemplate = null) {
+            if (Object.keys(savedWhatsAppTemplates).length === 0) {
+                await loadWhatsAppTemplatesFromFirebase();
+            }
+            const order = currentOrdersList.find(o => o.orderId === orderId);
+            if (!order) {
+                alert("Order not found.");
+                return;
+            }
+
+            const phoneRaw = order.customer && order.customer.phone ? String(order.customer.phone).trim() : '';
+            const cleanPhone = phoneRaw.replace(/\D/g, '');
+            if (!cleanPhone || cleanPhone.length < 10) {
+                alert("Invalid or missing phone number on this order.");
+                return;
+            }
+
+            currentWhatsAppOrderId = orderId;
+
+            // Auto-detect default template if not explicitly specified
+            if (!defaultTemplate) {
+                const isCod = getOrderIsCod(order);
+                const paymentStatus = ((order.payment && order.payment.status) || (isCod ? 'COD_PENDING' : 'PENDING')).toUpperCase();
+                const status = (order.status || 'PENDING').toUpperCase();
+                const isOnlinePaid = !isCod && (paymentStatus === 'CAPTURED' || paymentStatus === 'PAID_ONLINE' || status === 'CONFIRMED' || status === 'PAYMENT_CAPTURED' || (order.payment && (order.payment.cashfree_payment_id || order.payment.cashfreePaymentId || order.payment.payment_id || order.payment.razorpayPaymentId)));
+                const isOnlinePendingPayment = !isCod && !isOnlinePaid && status !== 'CANCELLED';
+
+                if (isOnlinePendingPayment) {
+                    defaultTemplate = 'payment_pending_cod';
+                } else if (status === 'SHIPPED' || status === 'SHIPMENT_BOOKED' || (order.shipping && order.shipping.awb)) {
+                    defaultTemplate = 'shipped';
+                } else if (status === 'DELIVERED') {
+                    defaultTemplate = 'delivered';
+                } else {
+                    defaultTemplate = 'order_accepted';
+                }
+            }
+
+            currentWhatsAppTemplate = defaultTemplate || 'order_accepted';
+
+            // Populate Modal Fields
+            const customerName = (order.customer && order.customer.name) || 'Customer';
+            document.getElementById('wa-modal-subtitle').textContent = `${customerName} • Order #${orderId}`;
+            document.getElementById('wa-recipient-phone').textContent = `+91 ${cleanPhone}`;
+
+            const badgeContainer = document.getElementById('wa-order-badge-container');
+            if (badgeContainer) {
+                badgeContainer.innerHTML = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">Status: ${order.status || 'PLACED'}</span>`;
+            }
+
+            selectWhatsAppTemplate(currentWhatsAppTemplate);
+
+            document.getElementById('whatsapp-modal').classList.remove('hidden');
+        }
+
+        function closeWhatsAppModal() {
+            currentWhatsAppOrderId = null;
+            document.getElementById('whatsapp-modal').classList.add('hidden');
+        }
+
+        function selectWhatsAppTemplate(tplKey) {
+            currentWhatsAppTemplate = tplKey;
+            const order = currentOrdersList.find(o => o.orderId === currentWhatsAppOrderId);
+            if (!order) return;
+
+            // Update button styles
+            const allBtns = document.querySelectorAll('.wa-tpl-btn');
+            allBtns.forEach(btn => {
+                btn.className = 'wa-tpl-btn p-2 rounded-lg border text-[11px] font-medium text-left transition-all cursor-pointer bg-white text-gray-700 border-gray-200 hover:bg-gray-50';
+            });
+
+            const activeBtn = document.getElementById(`wa-tpl-btn-${tplKey}`);
+            if (activeBtn) {
+                activeBtn.className = 'wa-tpl-btn p-2 rounded-lg border text-[11px] font-bold text-left transition-all cursor-pointer bg-emerald-600 text-white border-emerald-600 shadow-xs';
+            }
+
+            const msg = generateWhatsAppMessage(order, tplKey);
+            const textarea = document.getElementById('wa-message-textarea');
+            textarea.value = msg;
+            updateWhatsAppCharCount();
+        }
+
+        function updateWhatsAppCharCount() {
+            const textarea = document.getElementById('wa-message-textarea');
+            const countEl = document.getElementById('wa-char-count');
+            if (textarea && countEl) {
+                countEl.textContent = `${textarea.value.length} chars`;
+            }
+        }
+
+        function copyWhatsAppMessageToClipboard() {
+            const textarea = document.getElementById('wa-message-textarea');
+            if (!textarea || !textarea.value) return;
+
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                const btn = document.getElementById('wa-copy-btn');
+                if (btn) {
+                    btn.innerHTML = `<i class="fa-solid fa-check text-emerald-600"></i> <span class="text-emerald-600 font-bold">Copied!</span>`;
+                    setTimeout(() => {
+                        btn.innerHTML = `<i class="fa-regular fa-copy"></i> <span>Copy Text</span>`;
+                    }, 2000);
+                }
+            }).catch(() => {
+                alert("Failed to copy to clipboard.");
+            });
+        }
+
+        async function sendWhatsAppViaAPI() {
+            if (!currentWhatsAppOrderId) return;
+            const order = currentOrdersList.find(o => o.orderId === currentWhatsAppOrderId);
+            if (!order) {
+                alert("Order not found.");
+                return;
+            }
+
+            const phoneRaw = order.customer && order.customer.phone ? String(order.customer.phone).trim() : '';
+            const cleanPhone = phoneRaw.replace(/\D/g, '');
+            if (!cleanPhone || cleanPhone.length < 10) {
+                alert("Invalid or missing phone number.");
+                return;
+            }
+
+            const textarea = document.getElementById('wa-message-textarea');
+            const message = textarea.value.trim();
+            if (!message) {
+                alert("Please enter a message to send.");
+                return;
+            }
+
+            const btn = document.getElementById('wa-send-api-btn');
+            const originalContent = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending via API...</span>`;
+            }
+
+            try {
+                // 1. Direct Evolution WhatsApp API call
+                const evoUrl = `${EVO_CONFIG.baseUrl.replace(/\/$/, '')}/message/sendText/${encodeURIComponent(EVO_CONFIG.instance)}`;
+                const formattedPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
+
+                const evoRes = await fetch(evoUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': EVO_CONFIG.apiKey
+                    },
+                    body: JSON.stringify({
+                        number: formattedPhone,
+                        text: message
+                    })
+                });
+
+                if (evoRes.ok) {
+                    if (btn) {
+                        btn.innerHTML = `<i class="fa-solid fa-check"></i> <span>Message Sent via Evolution!</span>`;
+                        btn.className = 'px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md cursor-default';
+                    }
+                    setTimeout(() => {
+                        closeWhatsAppModal();
+                        alert(`✅ WhatsApp message sent successfully via Evolution API to ${order.customer?.name || 'Customer'} (+${formattedPhone})!`);
+                        loadOrdersAndStats();
+                    }, 600);
+                    return;
+                }
+
+                // Fallback to backend route if direct API returned non-200
+                const response = await fetch(`${WORKER_BASE}/api/admin/orders/${encodeURIComponent(currentWhatsAppOrderId)}/whatsapp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentAdminToken}`
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        phone: cleanPhone
+                    })
+                });
+
+                const result = await response.json().catch(() => ({}));
+                if (response.ok && result.success) {
+                    if (btn) {
+                        btn.innerHTML = `<i class="fa-solid fa-check"></i> <span>Message Sent!</span>`;
+                        btn.className = 'px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md cursor-default';
+                    }
+                    setTimeout(() => {
+                        closeWhatsAppModal();
+                        alert(`✅ WhatsApp message sent successfully to ${order.customer?.name || 'Customer'} (+91 ${cleanPhone})!`);
+                        loadOrdersAndStats();
+                    }, 600);
+                } else {
+                    throw new Error(result.error || result.message || 'Evolution API send returned failure.');
+                }
+            } catch (err) {
+                console.error("WhatsApp API Send Error:", err);
+                alert(`⚠️ WhatsApp API Send Error: ${err.message}\n\nYou can use 'Open WhatsApp Web' as fallback.`);
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                }
+            }
+        }
+
+        function openInWhatsAppFallback() {
+            const order = currentOrdersList.find(o => o.orderId === currentWhatsAppOrderId);
+            if (!order) return;
+            const phoneRaw = order.customer && order.customer.phone ? String(order.customer.phone).trim() : '';
+            const cleanPhone = phoneRaw.replace(/\D/g, '');
+            const message = document.getElementById('wa-message-textarea').value.trim();
+            if (cleanPhone) {
+                window.open(`https://wa.me/91${cleanPhone}?text=${encodeURIComponent(message)}`, '_blank');
+            }
+        }
+
+        // WhatsApp Shortcuts (Backwards-compatibility)
+        function sendCodOtpReminderWhatsApp(orderId) {
+            openWhatsAppModal(orderId, 'cod_followup');
+        }
+
+        function sendPendingPaymentWhatsApp(orderId) {
+            openWhatsAppModal(orderId, 'payment_pending_cod');
+        }
+
+        // ==========================================
+        // CHANGE ORDER PRODUCT & CUSTOM PRICING
+        // ==========================================
+        let currentChangeProductOrderId = null;
+
+        const CATALOG_PRICE_MAP = {
+            'AAB-HAYAT-500ML': { name: 'AAB-E-HAYAT™ Natural Botanical Juice (500ml)', price: 999, weight: '600gm' },
+            'AAB-HAYAT-2PACK': { name: 'AAB-E-HAYAT™ Botanical Juice (2-Bottle Pack - 1000ml)', price: 1998, weight: '1200gm' },
+            'AAB-HAYAT-3PACK': { name: 'AAB-E-HAYAT™ Botanical Juice (3-Bottle Pack - 1500ml)', price: 2997, weight: '1800gm' }
+        };
+
+        function onProductDropdownChanged() {
+            const selectEl = document.getElementById('change-product-select');
+            const sku = selectEl ? selectEl.value : null;
+            const catItem = CATALOG_PRICE_MAP[sku];
+            if (catItem) {
+                const unitPriceInput = document.getElementById('change-product-unit-price');
+                if (unitPriceInput) unitPriceInput.value = catItem.price;
+            }
+            recalcChangeProductTotal();
+        }
+
+        function recalcChangeProductTotal() {
+            const qty = Math.max(1, parseInt(document.getElementById('change-product-qty').value, 10) || 1);
+            const unitPrice = Math.max(0, parseFloat(document.getElementById('change-product-unit-price').value) || 0);
+            const shipping = Math.max(0, parseFloat(document.getElementById('change-product-delivery-charge').value) || 0);
+            const discount = Math.max(0, parseFloat(document.getElementById('change-product-discount').value) || 0);
+            const codCharge = Math.max(0, parseFloat(document.getElementById('change-product-cod-charge').value) || 0);
+
+            const subtotal = qty * unitPrice;
+            const finalTotal = Math.max(0, subtotal + shipping + codCharge - discount);
+
+            // Update live breakdown labels
+            const subtotalEl = document.getElementById('preview-change-subtotal');
+            if (subtotalEl) subtotalEl.textContent = `Rs. ${subtotal.toLocaleString('en-IN')}`;
+
+            const shippingEl = document.getElementById('preview-change-shipping');
+            if (shippingEl) shippingEl.textContent = shipping > 0 ? `+ Rs. ${shipping}` : 'FREE';
+
+            const discountEl = document.getElementById('preview-change-discount');
+            if (discountEl) discountEl.textContent = discount > 0 ? `- Rs. ${discount}` : 'Rs. 0';
+
+            const codEl = document.getElementById('preview-change-cod');
+            if (codEl) codEl.textContent = codCharge > 0 ? `+ Rs. ${codCharge}` : 'Rs. 0';
+
+            const finalTotalEl = document.getElementById('change-product-final-total');
+            if (finalTotalEl) finalTotalEl.textContent = `Rs. ${finalTotal.toLocaleString('en-IN')}`;
+
+            const btnSaveTotalEl = document.getElementById('btn-save-total-preview');
+            if (btnSaveTotalEl) btnSaveTotalEl.textContent = `Rs. ${finalTotal.toLocaleString('en-IN')}`;
+        }
+
+        function openChangeProductModal(orderId) {
+            currentChangeProductOrderId = String(orderId);
+            const order = currentOrdersList.find(o => String(o.orderId) === String(orderId));
+            if (!order) {
+                alert(`Order #${orderId} details not found. Please refresh the dashboard.`);
+                return;
+            }
+
+            const customerName = order.customer?.name || 'Customer';
+            const subtitleEl = document.getElementById('change-product-modal-subtitle');
+            if (subtitleEl) {
+                subtitleEl.textContent = `Order #${orderId} • Customer: ${customerName}`;
+            }
+
+            // Populate current item details
+            const firstItem = (order.items && order.items[0]) || {};
+            const currentNameEl = document.getElementById('change-product-current-name');
+            const currentSkuEl = document.getElementById('change-product-current-sku');
+            const currentQtyEl = document.getElementById('change-product-current-qty');
+            const currentPriceEl = document.getElementById('change-product-current-price');
+
+            if (currentNameEl) currentNameEl.textContent = firstItem.name || firstItem.productName || 'Custom Kit';
+            if (currentSkuEl) currentSkuEl.textContent = firstItem.sku || 'N/A';
+            if (currentQtyEl) currentQtyEl.textContent = `${firstItem.quantity || 1} units`;
+            if (currentPriceEl) currentPriceEl.textContent = `Rs. ${(order.pricing?.total || order.pricing?.subtotal || 0)}`;
+
+            // Populate form fields with current values
+            const qtyInput = document.getElementById('change-product-qty');
+            if (qtyInput) qtyInput.value = firstItem.quantity || 1;
+
+            const unitPriceInput = document.getElementById('change-product-unit-price');
+            if (unitPriceInput) {
+                unitPriceInput.value = firstItem.unitPrice || firstItem.price || 559;
+            }
+
+            const deliveryInput = document.getElementById('change-product-delivery-charge');
+            if (deliveryInput) {
+                deliveryInput.value = order.pricing?.shipping !== undefined ? order.pricing.shipping : 0;
+            }
+
+            const discountInput = document.getElementById('change-product-discount');
+            if (discountInput) {
+                discountInput.value = order.pricing?.discount || order.pricing?.onlineDiscount || 0;
+            }
+
+            const codInput = document.getElementById('change-product-cod-charge');
+            if (codInput) {
+                codInput.value = order.pricing?.codCharge || 0;
+            }
+
+            const selectDropdown = document.getElementById('change-product-select');
+            if (selectDropdown) {
+                if (firstItem.sku && CATALOG_PRICE_MAP[firstItem.sku]) {
+                    selectDropdown.value = firstItem.sku;
+                } else {
+                    selectDropdown.value = 'fati_002';
+                }
+            }
+
+            // Shiprocket status info
+            const srMsgEl = document.getElementById('change-product-sr-msg');
+            if (srMsgEl) {
+                if (order.shipping?.shiprocketOrderId) {
+                    srMsgEl.innerHTML = `⚡ <b>Shiprocket Order #${order.shipping.shiprocketOrderId} detected.</b> The updated item, package weight, SKU, and amounts will sync directly with Shiprocket API.`;
+                } else {
+                    srMsgEl.innerHTML = `📦 <b>Order not yet moved to Shiprocket.</b> Updating will ensure the new product, custom price, and delivery fee are stored for future dispatch.`;
+                }
+            }
+
+            recalcChangeProductTotal();
+            document.getElementById('change-product-modal').classList.remove('hidden');
+        }
+
+        function closeChangeProductModal() {
+            document.getElementById('change-product-modal').classList.add('hidden');
+            currentChangeProductOrderId = null;
+        }
+
+        async function submitChangeProduct() {
+            if (!currentChangeProductOrderId) return;
+
+            const newSku = document.getElementById('change-product-select').value;
+            const quantity = parseInt(document.getElementById('change-product-qty').value, 10) || 1;
+            const unitPrice = parseFloat(document.getElementById('change-product-unit-price').value) || 0;
+            const shippingCharge = parseFloat(document.getElementById('change-product-delivery-charge').value) || 0;
+            const discount = parseFloat(document.getElementById('change-product-discount').value) || 0;
+            const codCharge = parseFloat(document.getElementById('change-product-cod-charge').value) || 0;
+            const reason = document.getElementById('change-product-reason').value.trim() || 'Customer requested product change';
+
+            const subtotal = quantity * unitPrice;
+            const finalTotal = Math.max(0, subtotal + shippingCharge + codCharge - discount);
+
+            const saveBtn = document.getElementById('btn-save-change-product');
+            const originalBtnHtml = saveBtn.innerHTML;
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Updating...</span>`;
+
+            try {
+                const response = await fetch(`${WORKER_BASE}/api/admin/orders/${encodeURIComponent(currentChangeProductOrderId)}/change-product`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentAdminToken}`,
+                        'X-Admin-Key': currentAdminToken
+                    },
+                    body: JSON.stringify({
+                        newSku,
+                        quantity,
+                        unitPrice,
+                        shippingCharge,
+                        discount,
+                        codCharge,
+                        finalTotal,
+                        reason
+                    })
+                });
+
+                const result = await response.json();
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error?.message || result.message || 'Failed to update order product.');
+                }
+
+                alert(`✅ Success: ${result.message}`);
+                closeChangeProductModal();
+
+                // Refresh orders
+                await loadOrdersAndStats();
+
+                // If order detail modal was open, refresh it with updated order
+                const updatedOrder = result.data;
+                if (updatedOrder && !document.getElementById('order-detail-modal').classList.contains('hidden')) {
+                    openOrderDetailModal(updatedOrder);
+                }
+            } catch (err) {
+                alert(`❌ Error updating product: ${err.message}`);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalBtnHtml;
+            }
+        }
+
+        function closeOrderDetailModal() {
+            document.getElementById('order-detail-modal').classList.add('hidden');
+        }
+
+        // Move Order to Shiprocket (Confirmed over phone / Unpaid or COD unverified)
+        async function moveOrderToShiprocket(orderId) {
+            const order = currentOrdersList.find(o => o.orderId === orderId);
+            const customerName = order?.customer?.name || 'Customer';
+            const prov = (order?.payment?.provider || order?.paymentMethod || order?.payment?.method || '').toLowerCase();
+            const isAlreadyPaid = (prov === 'cashfree' || prov === 'razorpay' || prov === 'online' || prov === 'prepaid') && (order?.payment?.status === 'CAPTURED' || order?.payment?.status === 'PAID_ONLINE' || order?.status === 'CONFIRMED');
+            const payTypeInfo = isAlreadyPaid ? 'Prepaid (Paid Online - Cashfree)' : 'Cash on Delivery (COD)';
+
+            const confirmed = confirm(`Move Order #${orderId} (${customerName}) to Shiprocket?\n\nPayment Mode: ${payTypeInfo}\n\nThis will create courier shipment in Shiprocket and mark the order as confirmed for dispatch.`);
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch(`${WORKER_BASE}/api/admin/orders/${encodeURIComponent(orderId)}/move-to-shiprocket`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentAdminToken}`,
+                        'X-Admin-Key': currentAdminToken
+                    },
+                    body: JSON.stringify({
+                        convertToCod: !isAlreadyPaid
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    alert(`✅ Order #${orderId} successfully moved to Shiprocket!\nAWB: ${result.data?.shipping?.awb || 'Assigned'}`);
+                    closeOrderDetailModal();
+                    loadOrdersAndStats();
+                } else {
+                    throw new Error(result.error?.message || result.error || result.message || 'Failed to book shipment on Shiprocket.');
+                }
+            } catch (err) {
+                console.error("Move to Shiprocket Error:", err);
+                alert(`❌ Failed to move order to Shiprocket:\n${err.message}`);
+            }
+        }
+
+        // Cancel Order Flow
+        function promptCancelOrder(orderId) {
+            pendingCancelOrderId = orderId;
+            document.getElementById('cancel-modal-order-id').textContent = orderId;
+            document.getElementById('cancel-reason-input').value = '';
+            document.getElementById('cancel-confirm-modal').classList.remove('hidden');
+        }
+
+        function closeCancelModal() {
+            pendingCancelOrderId = null;
+            document.getElementById('cancel-confirm-modal').classList.add('hidden');
+        }
+
+        async function executeCancelOrder() {
+            if (!pendingCancelOrderId || !currentAdminToken) return;
+
+            const orderId = pendingCancelOrderId;
+            const reason = document.getElementById('cancel-reason-input').value.trim() || 'Admin manual cancellation';
+            const btn = document.getElementById('cancel-confirm-btn');
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Cancelling...`;
+
+            try {
+                const response = await fetch(`${WORKER_BASE}/api/admin/orders/${encodeURIComponent(orderId)}/cancel`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentAdminToken}`,
+                        'X-Admin-Key': currentAdminToken
+                    },
+                    body: JSON.stringify({ reason })
+                });
+
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    closeCancelModal();
+                    loadOrdersAndStats();
+                    alert(`Order ${orderId} has been successfully cancelled.`);
+                } else {
+                    alert(result.error?.message || "Failed to cancel order.");
+                }
+            } catch (err) {
+                alert("Network error while cancelling order.");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Yes, Cancel Order";
+            }
+        }
+
+        // Permanent Delete Order Flow
+        function promptPermanentDeleteOrder(orderId) {
+            pendingDeleteOrderId = orderId;
+            const modalOrderId = document.getElementById('delete-modal-order-id');
+            const input = document.getElementById('delete-confirm-input');
+            const btn = document.getElementById('delete-confirm-btn');
+            const hint = document.getElementById('delete-input-hint');
+
+            if (modalOrderId) modalOrderId.textContent = orderId;
+            if (input) {
+                input.value = '';
+                setTimeout(() => input.focus(), 150);
+            }
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-trash-can text-xs"></i> <span>Delete Forever</span>`;
+            }
+            if (hint) hint.classList.add('hidden');
+
+            document.getElementById('delete-confirm-modal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            pendingDeleteOrderId = null;
+            document.getElementById('delete-confirm-modal').classList.add('hidden');
+        }
+
+        function handleDeleteInputChange(value) {
+            const btn = document.getElementById('delete-confirm-btn');
+            const hint = document.getElementById('delete-input-hint');
+            const isMatch = (value || '').trim().toUpperCase() === 'DELETE';
+
+            if (btn) btn.disabled = !isMatch;
+            if (hint) {
+                if ((value || '').trim().length > 0 && !isMatch) {
+                    hint.classList.remove('hidden');
+                } else {
+                    hint.classList.add('hidden');
+                }
+            }
+        }
+
+        async function executePermanentDeleteOrder() {
+            if (!pendingDeleteOrderId || !currentAdminToken) return;
+
+            const input = document.getElementById('delete-confirm-input');
+            if (!input || input.value.trim().toUpperCase() !== 'DELETE') {
+                alert("Please type DELETE in capital letters to confirm permanent deletion.");
+                return;
+            }
+
+            const orderId = pendingDeleteOrderId;
+            const btn = document.getElementById('delete-confirm-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>Deleting...</span>`;
+            }
+
+            try {
+                const response = await fetch(`${WORKER_BASE}/api/admin/orders/${encodeURIComponent(orderId)}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentAdminToken}`,
+                        'X-Admin-Key': currentAdminToken
+                    },
+                    body: JSON.stringify({ confirmText: 'DELETE' })
+                });
+
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    closeDeleteModal();
+                    loadOrdersAndStats();
+                    const srText = result.shiprocket_cancelled ? " and cancelled in Shiprocket" : "";
+                    alert(`✅ Order #${orderId} has been permanently deleted from Firebase${srText}.`);
+                } else {
+                    alert(result.error?.message || "Failed to delete order.");
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = `<i class="fa-solid fa-trash-can text-xs"></i> <span>Delete Forever</span>`;
+                    }
+                }
+            } catch (err) {
+                alert("Network error while deleting order: " + err.message);
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-trash-can text-xs"></i> <span>Delete Forever</span>`;
+                }
+            }
+        }
+
+        // Retry Shipping
+        async function retryShipping(orderId) {
+            if (!currentAdminToken) return;
+            if (!confirm(`Retry Shiprocket shipment booking for ${orderId}?`)) return;
+
+            try {
+                const response = await fetch(`${WORKER_BASE}/api/admin/orders/${orderId}/retry-shipping`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentAdminToken}`
+                    }
+                });
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    alert("Shipment successfully created!");
+                    closeOrderDetailModal();
+                    loadOrdersAndStats();
+                } else {
+                    alert(result.error?.message || "Failed to create shipment on retry.");
+                }
+            } catch (err) {
+                alert("Network error while retrying shipment.");
+            }
+        }
+
+        // Global ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeOrderDetailModal();
+                closeCancelModal();
+                closeDeleteModal();
+            }
+        });
+    </script>
+</body>
+</html>
