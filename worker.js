@@ -480,10 +480,31 @@ class ShiprocketClient {
 
     const phone = customer.phone ? String(customer.phone).replace(/\D/g, "").slice(-10) : "9999999999";
     const email = customer.email || "order@magicalseeds.in";
-    const address = customer.address || "Address Provided";
-    const pincode = String(customer.pincode || "").trim();
-    const city = customer.city || "India";
-    const state = customer.state || "India";
+    const address = customer.address || [customer.house, customer.area, customer.cityState].filter(Boolean).join(", ") || "Address Provided";
+
+    // Robust Pincode extraction:
+    let pincode = String(customer.pincode || order.pincode || "").trim();
+    if (!pincode || !/^\d{6}$/.test(pincode)) {
+      const pinMatch = String(address).match(/\b([1-9][0-9]{5})\b/);
+      if (pinMatch) {
+        pincode = pinMatch[1];
+      }
+    }
+    if (!pincode) {
+      pincode = "400001"; // Fallback safe default Indian pincode if none found
+    }
+
+    let city = customer.city || "";
+    let state = customer.state || "";
+    if (!city || !state) {
+      if (customer.cityState) {
+        const parts = customer.cityState.split(",").map(s => s.trim());
+        city = city || parts[0] || "";
+        state = state || parts[1] || parts[0] || "";
+      }
+    }
+    city = city || "Mumbai";
+    state = state || "Maharashtra";
 
     const product = order.product || {};
     const qty = parseInt(product.quantity || 1, 10);

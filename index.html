@@ -1972,6 +1972,10 @@
           customer: {
             name: pendingCodOrder.name,
             phone: pendingCodOrder.phone,
+            house: pendingCodOrder.house || "",
+            area: pendingCodOrder.area || "",
+            cityState: pendingCodOrder.cityState || "",
+            pincode: pendingCodOrder.pincode || "",
             address: `${pendingCodOrder.house}, ${pendingCodOrder.area}, ${pendingCodOrder.cityState} - ${pendingCodOrder.pincode}`
           },
           status: "CONFIRMED"
@@ -2092,6 +2096,10 @@
           customer: {
             name: name,
             phone: phone,
+            house: house,
+            area: area,
+            cityState: cityState,
+            pincode: pincode,
             address: `${house}, ${area}, ${cityState} - ${pincode}`
           },
           status: "CONFIRMED"
@@ -2156,6 +2164,10 @@
           customer: {
             name: name,
             phone: phone,
+            house: house,
+            area: area,
+            cityState: cityState,
+            pincode: pincode,
             address: `${house}, ${area}, ${cityState} - ${pincode}`
           },
           status: "PAYMENT_PENDING"
