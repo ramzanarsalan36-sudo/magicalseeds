@@ -44,8 +44,8 @@ const CONFIG = {
   // Razorpay Gateway & Webhook Credentials
   // --------------------------------------------------------------------------
   RAZORPAY: {
-    KEY_ID: "rzp_test_Th6Nto2sVfzsSu",
-    KEY_SECRET: "WYXJoqYs3649jqYngD5IoORr",
+    KEY_ID: "rzp_live_Ti9qUSRryLMlCO",
+    KEY_SECRET: "e5F1OOKcrYrGu1cHHRhpvuM9",
     WEBHOOK_SECRET: "rzp_magical_seeds_webhook_2026",
     CURRENCY: "INR"
   },
@@ -65,8 +65,8 @@ const CONFIG = {
   // Shiprocket Logistics Credentials
   // --------------------------------------------------------------------------
   SHIPROCKET: {
-    EMAIL: "tara472@gmail.com",
-    PASSWORD: "PLACEHOLDER_SHIPROCKET_PASSWORD", // Insert Shiprocket Password
+    EMAIL: "seeds@gmail.com",
+    PASSWORD: "$q%t6Jxr9FZXGCB#zibiaeVEB%l^H#cI",
     BASE_URL: "https://apiv2.shiprocket.in/v1/external",
     AUTO_PUSH_ON_PAID: true,
     AUTO_PUSH_ON_CONFIRMED_COD: true,
